@@ -25,6 +25,8 @@ Retriv is a no-code platform that lets businesses create and embed their own AI 
 - **[FastAPI](https://fastapi.tiangolo.com/)**
 - **[Redis](https://redis.io/)**
 - **[Prisma](https://www.prisma.io/)**
+- **[Langchain](https://www.langchain.com/)**
+- **[Langfuse](https://langfuse.com/)**
 - **[PostgreSQL](https://www.postgresql.org/)**
 - **[Qdrant](https://qdrant.tech/)**
 - **[BeautifulSoup]()**
@@ -33,9 +35,10 @@ Retriv is a no-code platform that lets businesses create and embed their own AI 
 
 [![WatchDemo](https://raw.githubusercontent.com/priyanshuxkumar/retriv-web/e0e56eaabf38e1bcf7ece9526610be4f97da223c/public/thumbnail.png)](https://youtu.be/_V30qqdX1p4)
 
- I embedded it on my portfolio website where you can see the agent being embedded and responding based on my website data.
+I embedded it on my portfolio website where you can see the agent being embedded and responding based on my website data.
 
 ## **Design**
+
 Below is the basic architectural flow of the Agent Create and Chat routes in the system:
 
 ![Architecture Design Image](public/architecture.png)
