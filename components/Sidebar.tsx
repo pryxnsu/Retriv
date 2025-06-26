@@ -8,6 +8,7 @@ import { alegreya } from './fonts/fonts';
 import { User, useUser } from '@/context/user.context';
 import UserProfile from './UserProfile';
 import { handleLogout } from '@/utils/user';
+import EmailNotVerifiedNotice from './EmailVerification';
 
 export const item = [
     {
@@ -38,6 +39,8 @@ export default function Sidebar() {
     const { user, isLoading, error } = useUser();
     return (
         <>
+            {/* Showing verify email component  */}
+            {!isLoading && <EmailNotVerifiedNotice />}
             <nav className="mt-2 flex-1">
                 <div className={`flex justify-between px-2 mb-8 ${alegreya.className}`}>
                     <span className="text-2xl font-semibold">Retriv</span>

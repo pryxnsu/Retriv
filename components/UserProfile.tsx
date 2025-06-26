@@ -81,7 +81,9 @@ export default function UserProfile({ user, isLoading, error, handleLogout }: Us
                             <span className="w-28 font-medium leading-none text-sm truncate">
                                 {user?.userMetadata.name}
                             </span>
-                            <span className="text-xs text-muted-foreground">Free plan</span>
+                            <span className="text-xs text-muted-foreground">
+                                {user.userMetadata.hasSubscription ? 'Pro' : 'Free'} plan
+                            </span>
                         </div>
                     </>
                 )}
