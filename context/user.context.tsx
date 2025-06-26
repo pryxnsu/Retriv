@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 export interface User {
-    id: number;
+    id: string;
     email: string;
     userMetadata: {
         name: string;
@@ -14,6 +14,7 @@ export interface User {
         email: string;
         emailVerified: boolean;
         agentId: string;
+        hasSubscription: boolean;
     };
 }
 
@@ -55,8 +56,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             if (response.data.success == true) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
-
-                const { name, email } = user?.userMetadata || {};
+                const { name, email } = response.data.data?.userMetadata || {};
 
                 // Set data to local storage
                 if (name && !getLocalStorage('user_fullname')) {
@@ -69,7 +69,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         } catch (err) {
             const error = err as AxiosError;
 
-            const errMsg = (error.response?.data as AxiosError).message as string;
+            const errMsg = ((error.response?.data as AxiosError)?.message as string) || 'Something went wrong';
 
             if (error.response) {
                 setError(errMsg || 'Failed to fetch user details');
@@ -81,7 +81,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [user?.userMetadata]);
+    }, []);
 
     useEffect(() => {
         fetchUser();
