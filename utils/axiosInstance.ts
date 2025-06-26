@@ -8,7 +8,11 @@ AxiosInstance.interceptors.response.use(
     (response: AxiosResponse): AxiosResponse => {
         return response;
     },
-    (error: AxiosError) => {
+    async (error: AxiosError) => {
+        const err = error as AxiosError;
+        if (err.status === 429) {
+            console.error((err.response?.data as AxiosError).message);
+        }
         return Promise.reject(error);
     },
 );
