@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/
 import { AxiosError } from 'axios';
 import { AgentSkeleton } from '../Skeleton/AgentSkeleton';
 import NoDataFound from '../NoDataFound';
+import AgentPreparing from '../AgentPreparing';
 
 export interface AgentProps {
     id: string;
@@ -53,10 +54,16 @@ const bgColorMap: Record<string, string> = {
     'sky-100': 'bg-sky-100',
 };
 
-const useGetAgent = (): { agent: AgentProps | undefined; isLoading: boolean; error: string | null } => {
+const useGetAgent = (): {
+    agentPreparingMsg: string | null;
+    agent: AgentProps | undefined;
+    isLoading: boolean;
+    error: string | null;
+} => {
     const [data, setData] = useState<AgentProps>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [agentPreparingMsg, setAgentPreparingMsg] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,7 +74,11 @@ const useGetAgent = (): { agent: AgentProps | undefined; isLoading: boolean; err
                         'Content-Type': 'application/json',
                     },
                 });
+
                 if (response.data.success === true) {
+                    if (response.data.statusCode === 202) {
+                        setAgentPreparingMsg(response.data.message);
+                    }
                     setData(response.data.data);
                 }
             } catch (err) {
@@ -88,6 +99,7 @@ const useGetAgent = (): { agent: AgentProps | undefined; isLoading: boolean; err
         fetchData();
     }, []);
     return {
+        agentPreparingMsg,
         agent: data,
         isLoading,
         error,
@@ -95,7 +107,7 @@ const useGetAgent = (): { agent: AgentProps | undefined; isLoading: boolean; err
 };
 
 export default function AgentDashboard() {
-    const { agent, isLoading, error } = useGetAgent();
+    const { agentPreparingMsg, agent, isLoading, error } = useGetAgent();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [agentStatus, setAgentStatus] = useState<'Running' | 'Error' | 'Pending'>();
 
@@ -109,6 +121,10 @@ export default function AgentDashboard() {
 
     if (error) {
         return <NoDataFound content={error} />;
+    }
+
+    if (typeof agentPreparingMsg === 'string' && agentPreparingMsg?.trim() !== '' && !agent) {
+        return <AgentPreparing message={agentPreparingMsg} />;
     }
 
     if (agent && !isLoading) {
