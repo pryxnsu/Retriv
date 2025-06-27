@@ -5,25 +5,16 @@ import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import BuySubscription from '../BuySubscription';
 import { Button } from '../ui/button';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '../ui/alert-dialog';
 import NoDataFound from '../NoDataFound';
 import Loader from '../Loader';
 import SubscriptionCancelled from '../SubscriptionCancelled';
+import { useRouter } from 'next/navigation';
 
 export interface ActivePlanProp {
     planId: string;
     name: string;
     price: number;
+    currency: string;
     billingPeriod: string;
     userCancelledSubscription: boolean;
 }
@@ -52,7 +43,6 @@ const useFetchUserActivePlan = () => {
                 }
             } catch (err: unknown) {
                 const error = err as AxiosError;
-
                 const errMsg = (error.response?.data as AxiosError)?.message || 'Something went wrong';
                 const statusCode = error.response?.status;
 
@@ -85,20 +75,16 @@ const useFetchUserActivePlan = () => {
 };
 
 export default function SettingsBillingTab() {
+    const router = useRouter();
     const { activePlan, isLoading, userCancelledSubscription, error } = useFetchUserActivePlan();
-    const [subscriptionCancelling, setSubscriptionCancelling] = useState<boolean>(false);
 
-    const handleCancelSubscription = async () => {
-        setSubscriptionCancelling(true);
+    const handleManageSubscription = async () => {
         try {
-            const response = await AxiosInstance.delete('/api/payment/subscription/cancel', {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            const response = await AxiosInstance.get('/api/payment/manage-subscription', {
                 withCredentials: true,
             });
-            if (response.data.success === true) {
-                toast(response.data.message);
+            if (response.data.success) {
+                router.push(response.data.data.portalUrl);
             }
         } catch (err: unknown) {
             const error = err as AxiosError;
@@ -116,8 +102,6 @@ export default function SettingsBillingTab() {
                     description: error.message,
                 });
             }
-        } finally {
-            setSubscriptionCancelling(false);
         }
     };
 
@@ -142,39 +126,15 @@ export default function SettingsBillingTab() {
                             <div>
                                 <p className="font-medium">{activePlan.name} Plan</p>
                                 <p className="text-sm text-muted-foreground">
-                                    ₹ {activePlan.price}/{activePlan.billingPeriod.toLowerCase()}, Billed monthly
+                                    $ {activePlan.price}/{activePlan.billingPeriod.toLowerCase()}, Billed monthly
                                 </p>
                             </div>
                             <Badge>Active</Badge>
                         </div>
                     </div>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            {!userCancelledSubscription && (
-                                <Button variant="outline" className="w-full">
-                                    {subscriptionCancelling ? 'Please wait...' : 'Cancel Subscription'}
-                                </Button>
-                            )}
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Cancel your subscription?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Are you sure you want to cancel your subscription? You will lose access to premium
-                                    features at the end of your current billing cycle.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={handleCancelSubscription}
-                                    className="bg-destructive hover:bg-destructive/90"
-                                >
-                                    Confirm
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+
+                    {/* Manage subscription  */}
+                    <Button onClick={handleManageSubscription}>Manage subscription</Button>
                 </>
             )}
 
