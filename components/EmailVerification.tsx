@@ -5,7 +5,7 @@ import { AlertTriangle } from 'lucide-react';
 
 const EmailNotVerifiedNotice = () => {
     const { user } = useUser();
-    console.log(user);
+
     if (user?.userMetadata.emailVerified) return null;
     return (
         <div className="fixed top-0 left-0 right-0 w-full border-b bg-gradient-to-r backdrop-blur-xl shadow-sm z-50">

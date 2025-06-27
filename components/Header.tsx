@@ -14,7 +14,7 @@ export function Header() {
                     <Link href="#faq" className="text-base transition-colors">
                         Faq
                     </Link>
-                    <Link href="#pricing" className="text-base transition-colors">
+                    <Link href="/pricing" className="text-base transition-colors">
                         Pricing
                     </Link>
                     <Link href="/legal/terms-of-services" className="text-base transition-colors">
