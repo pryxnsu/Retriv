@@ -29,7 +29,7 @@ export default function SettingsAccountsTab() {
                 withCredentials: true,
             });
             if (response.data.success === true) {
-                console.log('Deleted successfull');
+                console.log('Deleted successful');
             }
         } catch (err: unknown) {
             const error = err as AxiosError;
@@ -80,7 +80,7 @@ export default function SettingsAccountsTab() {
             <CardFooter>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant="destructive" className="w-full">
+                        <Button disabled variant="destructive" className="w-full">
                             Delete Agent
                         </Button>
                     </AlertDialogTrigger>
