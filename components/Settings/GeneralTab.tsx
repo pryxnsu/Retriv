@@ -36,6 +36,7 @@ interface GeneralTabProps {
 const useFetchSettingsGeneralTab = () => {
     const [data, setData] = useState<GeneralTabProps | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,21 +51,17 @@ const useFetchSettingsGeneralTab = () => {
                     setData(response.data.data);
                 }
             } catch (err) {
-                console.error(err);
                 const error = err as AxiosError;
 
-                if (error.response) {
-                    toast.error('Failed to fetch settings', {
-                        description: (error.response.data as AxiosError)?.message || 'An error occurred',
-                    });
+                const statusCode = error.response?.status;
+                const errMsg = ((error.response?.data as AxiosError)?.message as string) || 'Something went wrong';
+
+                if (error.response || statusCode === 404) {
+                    setError(errMsg || 'Failed to fetch query details');
                 } else if (error.request) {
-                    toast.error('Network error', {
-                        description: 'No response from server. Please check your connection.',
-                    });
+                    setError('No response from server. Please check your connection.');
                 } else {
-                    toast.error('Unexpected error', {
-                        description: error.message,
-                    });
+                    setError('Something went wrong');
                 }
             } finally {
                 setIsLoading(false);
@@ -76,11 +73,12 @@ const useFetchSettingsGeneralTab = () => {
     return {
         generalSettings: data,
         isLoading,
+        error,
     };
 };
 
 export default function SettingsGeneralTab() {
-    const { generalSettings, isLoading } = useFetchSettingsGeneralTab();
+    const { generalSettings, isLoading, error } = useFetchSettingsGeneralTab();
     const form = useForm<z.infer<typeof AgentSettingsSchema>>({
         resolver: zodResolver(AgentSettingsSchema),
         defaultValues: {
@@ -170,6 +168,10 @@ export default function SettingsGeneralTab() {
 
     if ((!isLoading && !generalSettings) || Object.keys(generalSettings?.basicInfo || {}).length === 0) {
         return <NoDataFound content="To access these settings, please create an agent first." />;
+    }
+
+    if (error) {
+        return <NoDataFound content={error} />;
     }
     return (
         <>
