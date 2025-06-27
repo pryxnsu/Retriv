@@ -43,7 +43,7 @@ const useFetchQueryDetails = (id: ParamValue) => {
                 const error = err as AxiosError;
 
                 const statusCode = error.response?.status;
-                const errMsg = (error.response?.data as AxiosError).message as string;
+                const errMsg = ((error.response?.data as AxiosError)?.message as string) || 'Something went wrong';
 
                 if (error.response || statusCode === 404) {
                     setError(errMsg || 'Failed to fetch query details');
