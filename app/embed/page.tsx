@@ -33,6 +33,13 @@ export default function EmbedChatPage() {
         window.addEventListener('message', listener);
         return () => window.removeEventListener('message', listener);
     }, []);
+
+    // If the user opened directly in a tab
+    useEffect(() => {
+        if (window.top === window.self) {
+            window.location.href = '/agent';
+        }
+    }, []);
     return (
         <div className="w-full h-full">
             {!isOpen && (
