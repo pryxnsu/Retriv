@@ -19,6 +19,7 @@ export function CreateAgentForm({ onSuccess }: CreateAgentFormProps) {
     const [name, setName] = useState<string>('');
     const [sourceUrl, setSourceUrl] = useState<string>('');
     const [success, setSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -50,10 +51,11 @@ export function CreateAgentForm({ onSuccess }: CreateAgentFormProps) {
             }
         } catch (err: unknown) {
             const error = err as AxiosError;
-
+            const errMsg = (error.response?.data as AxiosError)?.message || 'Something went wrong'; 
+            setError(errMsg);
             if (error.response) {
                 toast.error('Failed to create agent', {
-                    description: (error.response.data as AxiosError)?.message || 'An error occurred',
+                    description: errMsg,
                 });
             } else if (error.request) {
                 toast.error('Network error', {
@@ -142,7 +144,10 @@ export function CreateAgentForm({ onSuccess }: CreateAgentFormProps) {
                                 We will automatically crawl this website to train your AI agent
                             </p>
                         </div>
-
+                        {/* Error message  */}
+                        <div>
+                            <span className='text-red-500 text-sm'>{error}</span>
+                        </div>
                         <div className="pt-2">
                             <Button
                                 type="submit"
