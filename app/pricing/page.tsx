@@ -3,6 +3,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { getLocalStorage } from '@/lib/storage';
 import AxiosInstance from '@/utils/axiosInstance';
 import { AxiosError } from 'axios';
 import { ArrowRight, Check } from 'lucide-react';
@@ -61,11 +62,34 @@ export default function Page() {
         };
         fecthPlans();
     }, []);
+
+    const handleCheckout = async (planId: string) => {
+        const customerEmail = getLocalStorage('user_email');
+        const customerName = getLocalStorage('user_fullname');
+        try {
+            const res = await AxiosInstance.post(
+                `/api/payment/checkout`,
+                {
+                    planId: planId,
+                    customerEmail,
+                    customerName,
+                },
+                {
+                    withCredentials: true,
+                },
+            );
+            if (res.data.success) {
+                router.push(res.data.data.url);
+            }
+        } catch (err: unknown) {
+            console.error(err);
+        }
+    };
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
             <div className="relative">
-                <div className="relative pt-24 pb-8 px-4">
+                <div className="relative pt-18 pb-8 px-4">
                     <div className="container max-w-3xl mx-auto space-y-8">
                         <div className="text-center">
                             <h1 className="text-4xl font-bold tracking-tight">Pricing</h1>
@@ -104,7 +128,7 @@ export default function Page() {
 
                                         <div className="space-y-2">
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-4xl font-bold tracking-tight">₹{plan.price}</span>
+                                                <span className="text-4xl font-bold tracking-tight">${plan.price}</span>
                                                 <span className="text-muted-foreground text-sm">
                                                     /{plan.billingPeriod}
                                                 </span>
@@ -120,9 +144,7 @@ export default function Page() {
 
                                 <CardContent className="space-y-6">
                                     <div className="space-y-4">
-                                        <h4 className="font-semibold text-sm">
-                                            Features included
-                                        </h4>
+                                        <h4 className="font-semibold text-sm">Features included</h4>
                                         <ul className="space-y-3">
                                             {plan.features.map((feature, idx) => (
                                                 <li key={idx} className="flex items-start gap-3">
@@ -136,8 +158,8 @@ export default function Page() {
                                     </div>
 
                                     <Button
-                                        onClick={() => router.push(`/checkout/billing/${plan.id}`)}
-                                        className="w-full mt-8 group"
+                                        onClick={() => handleCheckout(plan.id)}
+                                        className="w-full mt-8 group cursor-pointer"
                                         variant={plan.isPopular ? 'default' : 'outline'}
                                         disabled={!plan.isPopular}
                                     >
