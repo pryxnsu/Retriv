@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { Globe, BarChart, Bot, Hammer, Clock9, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { alegreya } from '../fonts/fonts';
 import { timeAgo } from '@/helper/time';
 import { AgentProps } from './AgentDashboard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -79,7 +78,7 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
             <div className="flex items-start justify-between">
                 <div>
                     <div className="flex items-center gap-3">
-                        <h2 className={`uppercase text-3xl font-bold ${alegreya.className}`}>{agent.name}</h2>
+                        <h2 className='uppercase text-2xl md:text-3xl font-bold'>{agent.name}</h2>
                         <Bot size={30} />
                         <Badge
                             variant={agent.status === 'Running' ? 'outline' : 'secondary'}
