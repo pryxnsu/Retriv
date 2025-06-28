@@ -13,10 +13,11 @@ import SkeletonBar from '../Skeleton/skeleton';
 import { MarkdownRenderer } from '../Markdown';
 import Link from 'next/link';
 import { getSessionStorage, setSessionStorage } from '@/lib/storage';
-import { inter } from '../fonts/fonts';
+import { inter } from '../../lib/fonts/fonts';
 import { Textarea } from '../ui/textarea';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
+import ErrorMessage from '../ChatErrorMessage';
 
 interface Message {
     content: string;
@@ -69,6 +70,7 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const [error, setError] = useState<string | null>(null);
 
     // Scroll to bottom when messages change
     useEffect(() => {
@@ -160,8 +162,8 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                     return [...prev, { content, role: 'assistant' }];
                                 });
                             }
-                        } catch (e) {
-                            console.error('Parsing error:', e);
+                        } catch (err: unknown) {
+                            console.error('Parsing error:', err);
                         }
                     } else if (message.startsWith('event: id')) {
                         // Handle temp conversation Id
@@ -177,11 +179,15 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                         if (errMsg.startsWith('data: ')) {
                             const data = JSON.parse(errMsg.substring(6));
                             console.log(`error: ${data.error}`);
-                            const errorMessage: Message = {
-                                content: data.error,
-                                role: 'assistant',
-                            };
-                            setChatData((prev) => [...prev, errorMessage]);
+                            setError(data);
+                        }
+                    } else if (message.startsWith('event: subscription:error')) {
+                        console.log('here', message);
+                        const errMsg = message.substring(26);
+                        if (errMsg.startsWith('data: ')) {
+                            const data = JSON.parse(errMsg.substring(6));
+                            console.error('data: ', data);
+                            setError(data);
                         }
                     }
                 }
@@ -239,7 +245,7 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                         }
                     `}</style>
 
-                    <div className="px-5 py-1 flex flex-col border border-gray-200 dark:border-muted shadow-lg rounded-md w-full bg-white dark:bg-black max-w-screen h-[84vh] md:w-[min(600px,100%)] lg:w-[min(720px,100%)] 2xl:w-[min(760px,100%)] z-[99999]">
+                    <div className="px-5 py-1 flex flex-col border border-gray-200 dark:border-muted shadow-xl rounded-md w-full bg-white dark:bg-[#212121] max-w-screen h-[84vh] md:w-[min(600px,100%)] lg:w-[min(720px,100%)] 2xl:w-[min(760px,100%)] z-[99999]">
                         <div>
                             <div className="text-neutral-500 text-sm py-3">Ask AI</div>
                         </div>
@@ -256,16 +262,16 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex items-start justify-center w-8 h-8 rounded-full">
                                                         {item.role === 'user' ? (
-                                                            <UserCircle className="h-5 w-5 text-blue-600 mt-2" />
+                                                            <UserCircle className="h-5 w-5 text-black dark:text-white mt-2" />
                                                         ) : (
-                                                            <Sparkles className="h-5 w-5 text-blue-600 mt-2" />
+                                                            <Sparkles className="h-5 w-5 text-black dark:text-white mt-2" />
                                                         )}
                                                     </div>
                                                     <div className="flex-1">
                                                         {item.role === 'assistant' ? (
                                                             <MarkdownRenderer content={item.content} />
                                                         ) : (
-                                                            <p className="text-sm">{item.content}</p>
+                                                            <p className="text-sm break-words">{item.content}</p>
                                                         )}
                                                     </div>
                                                 </div>
@@ -292,6 +298,11 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                         {isLoading && <SkeletonBar />}
                                         <div ref={messagesEndRef} />
                                     </div>
+                                    {error && (
+                                        <div className="space-y-2">
+                                            <ErrorMessage error={error} />
+                                        </div>
+                                    )}
                                 </ScrollArea>
                             )}
                         </div>
