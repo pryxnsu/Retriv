@@ -1,6 +1,6 @@
 'use client';
 
-import { alegreya } from '@/components/fonts/fonts';
+import { orbitron } from '@/lib/fonts/fonts';
 import MobileMenuItems from '@/components/MenuItems';
 import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -47,7 +47,7 @@ export default function MobileNavbar() {
                 aria-label="mobile-menu"
                 className="sticky top-0 bg-[#F9F6F0] dark:bg-black flex justify-between px-4 py-4 border-b z-50"
             >
-                <div className={`flex justify-between px-2 ${alegreya.className}`}>
+                <div className={`flex justify-between px-2 ${orbitron.className}`}>
                     <span className="text-2xl font-semibold">Retriv</span>
                 </div>
                 <span>

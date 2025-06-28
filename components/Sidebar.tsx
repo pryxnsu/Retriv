@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { Bot, Lock, Settings2, UserRoundSearch } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { alegreya } from './fonts/fonts';
+import { orbitron } from '../lib/fonts/fonts';
 import { User, useUser } from '@/context/user.context';
 import UserProfile from './UserProfile';
 import { handleLogout } from '@/utils/user';
@@ -42,7 +42,7 @@ export default function Sidebar() {
             {/* Showing verify email component  */}
             {!isLoading && <EmailNotVerifiedNotice />}
             <nav className="mt-2 flex-1">
-                <div className={`flex justify-between px-2 mb-8 ${alegreya.className}`}>
+                <div className={`flex justify-between px-2 mb-8 ${orbitron.className}`}>
                     <span className="text-2xl font-semibold">Retriv</span>
                 </div>
                 {/* <UserProfile /> */}

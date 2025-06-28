@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { orbitron } from './fonts/fonts';
+import { orbitron } from '../lib/fonts/fonts';
 
 export function Header() {
     return (
