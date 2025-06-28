@@ -1,10 +1,13 @@
-'use client';
-
+import { Metadata } from 'next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreditCard, Settings2, User } from 'lucide-react';
 import SettingsBillingTab from '@/components/Settings/BillingTab';
 import SettingsAccountsTab from '@/components/Settings/AccountsTab';
 import SettingsGeneralTab from '@/components/Settings/GeneralTab';
+
+export const metadata: Metadata = {
+    title: 'Settings',
+};
 
 export default function Settings() {
     return (

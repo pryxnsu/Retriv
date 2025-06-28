@@ -1,6 +1,11 @@
+import { Metadata } from 'next';
+import { Suspense } from 'react';
 import AgentDashboard from '@/components/agent/AgentDashboard';
 import { AgentSkeleton } from '@/components/Skeleton/AgentSkeleton';
-import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+    title: 'Agent',
+};
 
 export default function Page() {
     return (

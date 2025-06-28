@@ -1,8 +1,11 @@
-'use client';
-
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import Footer from '@/components/Footer';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Privacy Policy',
+};
 
 export default function Page() {
     return (

@@ -1,8 +1,11 @@
-'use client';
-
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import Footer from '@/components/Footer';
+
+export const metadata: Metadata = {
+    title: 'Terms of Services',
+};
 
 export default function Page() {
     return (
