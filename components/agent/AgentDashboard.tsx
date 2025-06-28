@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AxiosError } from 'axios';
 import { AgentSkeleton } from '../Skeleton/AgentSkeleton';
+import { useQuery } from '@tanstack/react-query';
 import NoDataFound from '../NoDataFound';
 import AgentPreparing from '../AgentPreparing';
 
@@ -54,53 +55,52 @@ const bgColorMap: Record<string, string> = {
     'sky-100': 'bg-sky-100',
 };
 
+interface AgentResponse {
+    success: boolean;
+    data: AgentProps;
+    message: string;
+    statusCode: number;
+}
+
+const fetchAgent = async (): Promise<AgentResponse> => {
+    try {
+        const response = await AxiosInstance.get('/api/v1/agent', {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.data.success) {
+            throw new Error(response.data.message || 'Failed to fetch Agent');
+        }
+        return response.data;
+    } catch (err) {
+        const error = err as AxiosError;
+        if (error.response) {
+            throw new Error((error.response.data as AxiosError)?.message || 'Failed to fetch Agent');
+        } else if (error.request) {
+            throw new Error('No response from server. Check your network.');
+        } else {
+            throw new Error('Unexpected error occurred');
+        }
+    }
+};
+
 const useGetAgent = (): {
     agentPreparingMsg: string | null;
     agent: AgentProps | undefined;
     isLoading: boolean;
-    error: string | null;
+    error: Error | null;
 } => {
-    const [data, setData] = useState<AgentProps>();
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [agentPreparingMsg, setAgentPreparingMsg] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await AxiosInstance.get('/api/v1/agent', {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.data.success === true) {
-                    if (response.data.statusCode === 202) {
-                        setAgentPreparingMsg(response.data.message);
-                    }
-                    setData(response.data.data);
-                }
-            } catch (err) {
-                const error = err as AxiosError;
-                const errMsg = (error.response?.data as AxiosError)?.message || 'Something went wrong';
-
-                if (error.response) {
-                    setError(errMsg || 'Failed to fetch Agent data');
-                } else if (error.request) {
-                    setError('No response from server. Please check your connection.');
-                } else {
-                    setError('Something went wrong');
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+    const { data, error, isLoading } = useQuery<AgentResponse, Error>({
+        queryKey: ['agent'],
+        queryFn: fetchAgent,
+        retry: false,
+    });
     return {
-        agentPreparingMsg,
-        agent: data,
+        agentPreparingMsg: data?.statusCode === 202 ? data.message : null,
+        agent: data?.data as AgentProps,
         isLoading,
         error,
     };
@@ -120,7 +120,7 @@ export default function AgentDashboard() {
     }
 
     if (error) {
-        return <NoDataFound content={error} />;
+        return <NoDataFound content={error.message} />;
     }
 
     if (typeof agentPreparingMsg === 'string' && agentPreparingMsg?.trim() !== '' && !agent) {

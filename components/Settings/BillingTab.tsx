@@ -1,5 +1,6 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
-import { useEffect, useState } from 'react';
 import AxiosInstance from '@/utils/axiosInstance';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
@@ -9,6 +10,7 @@ import NoDataFound from '../NoDataFound';
 import Loader from '../Loader';
 import SubscriptionCancelled from '../SubscriptionCancelled';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
 export interface ActivePlanProp {
     planId: string;
@@ -19,58 +21,49 @@ export interface ActivePlanProp {
     userCancelledSubscription: boolean;
 }
 
+const fetchUserActivePlan = async (): Promise<ActivePlanProp> => {
+    try {
+        const response = await AxiosInstance.get('/api/v1/plans/active', {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+
+        if (!response.data.success) {
+            throw new Error(response.data.message || 'Failed to fetch active plan details');
+        }
+
+        return response.data.data;
+    } catch (err: unknown) {
+        const error = err as AxiosError;
+        const statusCode = error.response?.status;
+
+        if (error.response && statusCode === 402) {
+            throw new Error((error.response.data as AxiosError)?.message || 'Subscribe to Pro Plan');
+        }
+
+        if (error.response) {
+            throw new Error((error.response.data as AxiosError)?.message || 'Failed to fetch active plan details');
+        } else if (error.request) {
+            throw new Error('No response from server. Check your network.');
+        } else {
+            throw new Error('Unexpected error occurred');
+        }
+    }
+};
+
 const useFetchUserActivePlan = () => {
-    const [userCancelledSubscription, setUserCancelledSubscription] = useState<boolean | null>(null);
-    const [activePlan, setActivePlan] = useState<ActivePlanProp | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await AxiosInstance.get('/api/v1/plans/active', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    withCredentials: true,
-                });
-
-                if (response.data.success === true) {
-                    if (response.data.data.planId) {
-                        setActivePlan(response.data.data);
-                        setUserCancelledSubscription(response.data.data.userCancelledSubscription);
-                    }
-                }
-            } catch (err: unknown) {
-                const error = err as AxiosError;
-                const errMsg = (error.response?.data as AxiosError)?.message || 'Something went wrong';
-                const statusCode = error.response?.status;
-
-                if (statusCode === 402) {
-                    // Payment required for subscription
-                    setActivePlan(null);
-                    setUserCancelledSubscription(false);
-                    return;
-                }
-
-                if (error.response) {
-                    setError(errMsg || 'Failed to fetch active plan details');
-                } else if (error.request) {
-                    setError('No response from server. Please check your connection.');
-                } else {
-                    setError('Something went wrong');
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        })();
-    }, []);
-
+    const { data, error, isLoading } = useQuery<ActivePlanProp, Error>({
+        queryKey: ['active-plan'],
+        queryFn: fetchUserActivePlan,
+        retry: false,
+    });
     return {
-        activePlan,
+        activePlan: data,
         isLoading,
-        userCancelledSubscription,
-        error,
+        userCancelledSubscription: data?.userCancelledSubscription,
+        error: error?.message,
     };
 };
 
@@ -111,6 +104,10 @@ export default function SettingsBillingTab() {
                 <Loader size="30" strokeWidth="2" />
             </div>
         );
+    }
+
+    if (error === 'Access restricted. Please subscribe to a Pro plan to view this data.') {
+        return <BuySubscription />;
     }
 
     if (error) {

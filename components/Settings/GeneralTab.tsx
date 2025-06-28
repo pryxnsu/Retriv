@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Separator } from '../ui/separator';
 import { Switch } from '../ui/switch';
-import { useEffect, useState } from 'react';
 import AxiosInstance from '@/utils/axiosInstance';
 import Loader from '../Loader';
 import { useForm } from 'react-hook-form';
@@ -18,6 +17,7 @@ import { Form, FormControl, FormField, FormItem } from '../ui/form';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import NoDataFound from '../NoDataFound';
+import { useQuery } from '@tanstack/react-query';
 
 interface GeneralTabProps {
     basicInfo: {
@@ -33,52 +33,44 @@ interface GeneralTabProps {
     };
 }
 
-const useFetchSettingsGeneralTab = () => {
-    const [data, setData] = useState<GeneralTabProps | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+const fetchGeneralSettings = async (): Promise<GeneralTabProps> => {
+    try {
+        const response = await AxiosInstance.get('/api/v1/settings/general', {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await AxiosInstance.get('/api/v1/settings/general', {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.data.success == true) {
-                    setData(response.data.data);
-                }
-            } catch (err) {
-                const error = err as AxiosError;
+        if (!response.data.success) {
+            throw new Error(response.data.message || 'Failed to fetch general settings');
+        }
 
-                const statusCode = error.response?.status;
-                const errMsg = ((error.response?.data as AxiosError)?.message as string) || 'Something went wrong';
+        return response.data.data;
+    } catch (err) {
+        const error = err as AxiosError;
 
-                if (error.response || statusCode === 404) {
-                    setError(errMsg || 'Failed to fetch query details');
-                } else if (error.request) {
-                    setError('No response from server. Please check your connection.');
-                } else {
-                    setError('Something went wrong');
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    return {
-        generalSettings: data,
-        isLoading,
-        error,
-    };
+        if (error.response) {
+            throw new Error((error.response.data as AxiosError)?.message || 'Failed to fetch settings');
+        } else if (error.request) {
+            throw new Error('No response from server. Check your network.');
+        } else {
+            throw new Error('Unexpected error occurred');
+        }
+    }
 };
 
 export default function SettingsGeneralTab() {
-    const { generalSettings, isLoading, error } = useFetchSettingsGeneralTab();
+    const {
+        data: generalSettings,
+        error,
+        isLoading,
+    } = useQuery<GeneralTabProps, Error>({
+        queryKey: ['general-settings'],
+        queryFn: fetchGeneralSettings,
+        retry: false,
+    });
+
     const form = useForm<z.infer<typeof AgentSettingsSchema>>({
         resolver: zodResolver(AgentSettingsSchema),
         defaultValues: {
@@ -166,12 +158,12 @@ export default function SettingsGeneralTab() {
         );
     }
 
-    if ((!isLoading && !generalSettings) || Object.keys(generalSettings?.basicInfo || {}).length === 0) {
-        return <NoDataFound content="To access these settings, please create an agent first." />;
+    if (error) {
+        return <NoDataFound content={error.message} />;
     }
 
-    if (error) {
-        return <NoDataFound content={error} />;
+    if ((!isLoading && !generalSettings) || Object.keys(generalSettings?.basicInfo || {}).length === 0) {
+        return <NoDataFound content="To access these settings, please create an agent first." />;
     }
     return (
         <>
