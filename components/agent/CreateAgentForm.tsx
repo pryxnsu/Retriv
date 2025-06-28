@@ -51,7 +51,7 @@ export function CreateAgentForm({ onSuccess }: CreateAgentFormProps) {
             }
         } catch (err: unknown) {
             const error = err as AxiosError;
-            const errMsg = (error.response?.data as AxiosError)?.message || 'Something went wrong'; 
+            const errMsg = (error.response?.data as AxiosError)?.message || 'Something went wrong';
             setError(errMsg);
             if (error.response) {
                 toast.error('Failed to create agent', {
@@ -146,7 +146,7 @@ export function CreateAgentForm({ onSuccess }: CreateAgentFormProps) {
                         </div>
                         {/* Error message  */}
                         <div>
-                            <span className='text-red-500 text-sm'>{error}</span>
+                            <span className="text-red-500 text-sm">{error}</span>
                         </div>
                         <div className="pt-2">
                             <Button
