@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('acc_token')?.value;
+    const token = request.cookies.get('rtv-auth.0')?.value;
     const { pathname } = request.nextUrl;
 
     if (token && (pathname.startsWith('/login') || pathname.startsWith('/signup'))) {
