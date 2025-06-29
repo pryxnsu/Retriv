@@ -11,6 +11,7 @@ import { ArrowRight, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Loader from '../Loader';
 import NoDataFound from '../NoDataFound';
+import { toast } from 'sonner';
 
 interface PlanProps {
     id: string;
@@ -72,6 +73,12 @@ export default function Pricing() {
     const handleCheckout = async (planId: string) => {
         const customerEmail = getLocalStorage('user_email');
         const customerName = getLocalStorage('user_fullname');
+
+        if (!customerEmail || !customerName) {
+            toast.error('Please sign up to buy a subscription');
+            router.push('/signup');
+            return;
+        }
         try {
             const res = await AxiosInstance.post(
                 `/api/payment/checkout`,
@@ -86,9 +93,26 @@ export default function Pricing() {
             );
             if (res.data.success) {
                 router.push(res.data.data.url);
+            } else {
+                toast.error(res.data.message || 'Failed to initiate checkout session');
             }
         } catch (err: unknown) {
-            console.error(err);
+            const error = err as AxiosError;
+
+            if (error.response) {
+                toast.error('Checkout failed', {
+                    description: (error.response.data as AxiosError)?.message || 'Something went wrong while checkout',
+                });
+            } else if (error.request) {
+                toast.error('Network error', {
+                    description: 'No response from server. Please check your connection.',
+                });
+            } else {
+                toast.error('Unexpected error', {
+                    description: error.message,
+                });
+            }
+            console.error('Checkout Error:', err);
         }
     };
 
