@@ -2,17 +2,29 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initChatWidget);
     } else {
-        initChatWidget();
+        try {
+            initChatWidget();
+        } catch (error) {
+            console.error(`Error mounting AI widget: ${error}`);
+        }
     }
 
     function initChatWidget() {
         const html = document.querySelector('html');
         const theme = html.getAttribute('class');
 
-        const agentId = document.currentScript?.getAttribute('data-agent-id');
-        const baseUrl = document.currentScript?.getAttribute('data-base-url');
-        const agentName = document.currentScript?.getAttribute('data-name');
-        const apiKey = document.currentScript?.getAttribute('data-api-key');
+        const scripts = document.querySelectorAll('script[src*="agent-widget.js"]');
+        const script = scripts[scripts.length - 1];
+
+        const agentId = script?.getAttribute('data-agent-id');
+        const baseUrl = script?.getAttribute('data-base-url');
+        const agentName = script?.getAttribute('data-name');
+        const apiKey = script?.getAttribute('data-api-key');
+
+        if (!agentId || !baseUrl || !apiKey) {
+            console.error('Missing widget attributes:', { agentId, baseUrl, apiKey });
+            return;
+        }
 
         // Create the button
         const button = document.createElement('button');
