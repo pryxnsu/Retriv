@@ -16,7 +16,6 @@ import { getSessionStorage, setSessionStorage } from '@/lib/storage';
 import { inter } from '../../lib/fonts/fonts';
 import { Textarea } from '../ui/textarea';
 import { AxiosError } from 'axios';
-import { toast } from 'sonner';
 import ErrorMessage from '../ChatErrorMessage';
 
 interface Message {
@@ -57,7 +56,7 @@ function useClearConversationIdOnRefresh() {
 export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen, onClose }: ChatInterfaceAgentProps) {
     useClearConversationIdOnRefresh();
 
-    const RETRIV_URL = process.env.NEXT_PUBLIC_SITE_URL!;
+    const RETRIV_URL = process.env.NEXT_PUBLIC_RETRIV_URL!;
     const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL!;
     const [isStreaming, setIsStreaming] = useState(false);
     const [sourcesUrl, setSourcesUrl] = useState<string[]>([]);
@@ -194,19 +193,14 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
             }
         } catch (err: unknown) {
             const error = err as AxiosError;
-
             if (error.response) {
-                toast.error('Something went wrong', {
-                    description: (error.response.data as AxiosError)?.message || 'An error occurred',
-                });
+                setError(
+                    (error.response.data as AxiosError)?.message || 'Something went wrong. Please try again later',
+                );
             } else if (error.request) {
-                toast.error('Network error', {
-                    description: 'No response from server. Please check your connection.',
-                });
+                setError('No response from server. Please check your connection.');
             } else {
-                toast.error('Unexpected error', {
-                    description: error.message,
-                });
+                setError('Something went wrong. Please try again later');
             }
         } finally {
             setIsStreaming(false);
@@ -299,7 +293,7 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                         <div ref={messagesEndRef} />
                                     </div>
                                     {error && (
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 mb-3">
                                             <ErrorMessage error={error} />
                                         </div>
                                     )}
@@ -326,7 +320,7 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                                             }}
                                                             className="min-h-[unset] overflow-hidden w-full resize-none dark:bg-muted placeholder:text-gray-500 dark:placeholder:text-gray-dark-200 border-none outline-none shadow-none px-3 py-2 ml-1 mr-2 max-h-[200px] overflow-y-auto disabled:cursor-not-allowed focus:border-0 active:border-0 focus-visible:ring-0 "
                                                             placeholder="Enter your query..."
-                                                            disabled={isLoading || isStreaming}
+                                                            disabled={isLoading || isStreaming || error !== null}
                                                             onKeyDown={(e) => {
                                                                 if (e.key == 'Enter' && !e.shiftKey) {
                                                                     e.preventDefault();
@@ -344,8 +338,8 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                         <Button
                                             type="submit"
                                             size="icon"
-                                            className="h-10 w-10 bg-transparent hover:bg-neutral-50 dark:hover:bg-black-80  shadow-none rounded-lg text-black dark:text-white cursor-pointer"
-                                            disabled={isLoading || isStreaming || !query.trim()}
+                                            className="h-10 w-10 bg-transparent hover:bg-neutral-50 dark:hover:bg-black-80  shadow-none rounded-lg text-black dark:text-white dark:hover:text-black cursor-pointer"
+                                            disabled={isLoading || isStreaming || !query.trim() || error !== null}
                                         >
                                             <SendHorizontal size={30} />
                                             <span className="sr-only">Send message</span>
