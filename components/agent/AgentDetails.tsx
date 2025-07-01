@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Globe, BarChart, Bot, Hammer, Clock9, Copy, Check } from 'lucide-react';
+import { Globe, BarChart, Bot, Hammer, Clock9, Copy, Check, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { timeAgo } from '@/helper/time';
 import { AgentProps } from './AgentDashboard';
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { getLocalStorage } from '@/lib/storage';
+import { Alert, AlertDescription } from '../ui/alert';
 
 interface IntegrationCodeProp {
     title: string;
@@ -78,7 +79,7 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
             <div className="flex items-start justify-between">
                 <div>
                     <div className="flex items-center gap-3">
-                        <h2 className='uppercase text-2xl md:text-3xl font-bold'>{agent.name}</h2>
+                        <h2 className="uppercase text-2xl md:text-3xl font-bold">{agent.name}</h2>
                         <Bot size={30} />
                         <Badge
                             variant={agent.status === 'Running' ? 'outline' : 'secondary'}
@@ -104,6 +105,12 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4 pt-4">
+                    <Alert>
+                        <Brain />
+                        <AlertDescription>
+                            We&apos;re updating your agent’s data. This may take a few minutes.
+                        </AlertDescription>
+                    </Alert>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                         <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
