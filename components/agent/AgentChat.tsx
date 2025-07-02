@@ -56,8 +56,8 @@ function useClearConversationIdOnRefresh() {
 export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen, onClose }: ChatInterfaceAgentProps) {
     useClearConversationIdOnRefresh();
 
-    const RETRIV_URL = process.env.NEXT_PUBLIC_RETRIV_URL!;
-    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL!;
+    const RETRIV_URL = process.env.NEXT_PUBLIC_RETRIV_URL || '';
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
     const [isStreaming, setIsStreaming] = useState(false);
     const [sourcesUrl, setSourcesUrl] = useState<string[]>([]);
     const [chatData, setChatData] = useState<ChatDataProps[]>([
@@ -178,15 +178,14 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                         if (errMsg.startsWith('data: ')) {
                             const data = JSON.parse(errMsg.substring(6));
                             console.log(`error: ${data.error}`);
-                            setError(data);
+                            setError(data.error);
                         }
                     } else if (message.startsWith('event: subscription:error')) {
-                        console.log('here', message);
                         const errMsg = message.substring(26);
                         if (errMsg.startsWith('data: ')) {
                             const data = JSON.parse(errMsg.substring(6));
-                            console.error('data: ', data);
-                            setError(data);
+                            console.error(`subscription error: ${data.error}`);
+                            setError(data.error);
                         }
                     }
                 }
@@ -294,7 +293,7 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                     </div>
                                     {error && (
                                         <div className="space-y-2 mb-3">
-                                            <ErrorMessage error={error} />
+                                            <ErrorMessage err={error} />
                                         </div>
                                     )}
                                 </ScrollArea>
