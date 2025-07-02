@@ -5,10 +5,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
 interface ErrorMessageProps {
-    error: string | null;
+    err: string | null;
 }
 
-export default function ErrorMessage({ error }: ErrorMessageProps) {
+export default function ErrorMessage({ err }: ErrorMessageProps) {
     return (
         <Alert
             variant={'destructive'}
@@ -19,7 +19,7 @@ export default function ErrorMessage({ error }: ErrorMessageProps) {
             aria-live="polite"
         >
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="pr-8">{error}</AlertDescription>
+            <AlertDescription className="pr-8">{err}</AlertDescription>
         </Alert>
     );
 }
