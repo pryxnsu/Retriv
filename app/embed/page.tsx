@@ -10,7 +10,7 @@ export default function EmbedChatPage() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
-        setTimeout(() => setIsOpen(true), 2000);
+        setTimeout(() => setIsOpen(true), 1500);
     }, []);
 
     const handleClose = () => {
@@ -24,6 +24,11 @@ export default function EmbedChatPage() {
         const listener = (event: MessageEvent) => {
             if (event.data?.type === 'INIT_CHAT') {
                 const { agentId, agentName, apiKey } = event.data.payload;
+                if (!agentId || !agentName || !apiKey) {
+                    alert('You cannot do chat with this agent. Invalid agent id or name or api key');
+                    window.parent.postMessage({ type: 'CLOSE_CHAT_IFRAME' }, '*');
+                    return;
+                }
                 setAgentId(agentId);
                 setAgentName(agentName);
                 setApiKey(apiKey);
