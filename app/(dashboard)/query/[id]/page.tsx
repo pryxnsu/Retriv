@@ -68,6 +68,7 @@ export default function Page() {
         queryFn: () => fetchQueryDetails(queryId as ParamValue),
         retry: false,
         enabled: !!queryId,
+        staleTime: 0,
     });
 
     // Subscription check logic
