@@ -134,7 +134,7 @@ export default function Page() {
                     <h2>12. Contact</h2>
                     <p>If you have any questions or concerns about these Terms, please reach out to:</p>
                     <p>
-                        <a href="mailto:support@retriv.xyz" className="flex items-center gap-1">
+                        <a href="mailto:priyanshu@retriv.xyz" className="flex items-center gap-1">
                             priyanshu@retriv.xyz <ExternalLink className="h-4 w-4" />
                         </a>
                     </p>
