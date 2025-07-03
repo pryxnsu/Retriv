@@ -23,16 +23,6 @@ interface PlanProps {
     features: string[];
 }
 
-const freePlan = {
-    id: 'free',
-    name: 'Free',
-    price: 0,
-    billingPeriod: 'month',
-    description: 'Perfect for getting started',
-    isPopular: false,
-    features: ['300 queries per month', 'Crawl and Index up to 20 Pages per Agent', 'Standard support'],
-};
-
 const fetchPlans = async (): Promise<PlanProps[]> => {
     try {
         const response = await AxiosInstance.get('/api/v1/plans', {
@@ -67,7 +57,6 @@ export default function Pricing() {
         queryKey: ['plans'],
         queryFn: fetchPlans,
         retry: false,
-        select: (data) => [freePlan, ...data],
     });
 
     const handleCheckout = async (planId: string) => {
@@ -127,6 +116,9 @@ export default function Pricing() {
     if (error) {
         return <NoDataFound content={error.message} />;
     }
+
+    // Sorting the plans based on price (Free tier showing first)    
+    plans?.sort((a, b) => a.price - b.price);
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
