@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 export default function EmbedChatPage() {
     const [agentId, setAgentId] = useState<string>('');
     const [agentName, setAgentName] = useState<string>('');
-    const [apiKey, setApiKey] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -23,15 +22,14 @@ export default function EmbedChatPage() {
     useEffect(() => {
         const listener = (event: MessageEvent) => {
             if (event.data?.type === 'INIT_CHAT') {
-                const { agentId, agentName, apiKey } = event.data.payload;
-                if (!agentId || !agentName || !apiKey) {
+                const { agentId, agentName } = event.data.payload;
+                if (!agentId || !agentName) {
                     alert('You cannot do chat with this agent. Invalid agent id or name or api key');
                     window.parent.postMessage({ type: 'CLOSE_CHAT_IFRAME' }, '*');
                     return;
                 }
                 setAgentId(agentId);
                 setAgentName(agentName);
-                setApiKey(apiKey);
             }
         };
 
@@ -63,13 +61,7 @@ export default function EmbedChatPage() {
                     </div>
                 </div>
             )}
-            <ChatInterfaceAgent
-                agentName={agentName}
-                agentId={agentId}
-                apiKey={apiKey}
-                isOpen={isOpen}
-                onClose={handleClose}
-            />
+            <ChatInterfaceAgent agentName={agentName} agentId={agentId} isOpen={isOpen} onClose={handleClose} />
         </div>
     );
 }

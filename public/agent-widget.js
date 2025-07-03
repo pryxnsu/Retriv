@@ -19,10 +19,9 @@
         const agentId = script?.getAttribute('data-agent-id');
         const baseUrl = script?.getAttribute('data-base-url');
         const agentName = script?.getAttribute('data-name');
-        const apiKey = script?.getAttribute('data-api-key');
 
-        if (!agentId || !baseUrl || !apiKey) {
-            console.error('Missing widget attributes:', { agentId, baseUrl, apiKey });
+        if (!agentId || !baseUrl) {
+            console.error('Missing widget attributes:', { agentId, baseUrl });
             return;
         }
 
@@ -121,7 +120,6 @@
                         payload: {
                             agentId,
                             agentName,
-                            apiKey,
                         },
                     },
                     '*',

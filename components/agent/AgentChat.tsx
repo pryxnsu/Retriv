@@ -32,7 +32,6 @@ interface ChatDataProps {
 interface ChatInterfaceAgentProps {
     agentName: string;
     agentId: string;
-    apiKey: string;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -53,7 +52,7 @@ function useClearConversationIdOnRefresh() {
     }, []);
 }
 
-export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen, onClose }: ChatInterfaceAgentProps) {
+export default function ChatInterfaceAgent({ agentName, agentId, isOpen, onClose }: ChatInterfaceAgentProps) {
     useClearConversationIdOnRefresh();
 
     const RETRIV_URL = process.env.NEXT_PUBLIC_RETRIV_URL || '';
@@ -108,7 +107,6 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${apiKey}`,
                 },
                 body: JSON.stringify({
                     agentId: agentId,
