@@ -18,7 +18,8 @@ export default function BuySubscription() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-sm text-muted-foreground mb-4">
-                        Advanced analytics, detailed reports, and exclusive insights await you.
+                        Get access to high-usage limits, priority crawling, exclusive insights, and full control over
+                        your AI agents.
                     </p>
                     <Link href="/pricing">
                         <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white dark:text-white">
