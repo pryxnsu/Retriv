@@ -156,10 +156,6 @@ export default function Apikeys() {
         );
     }
 
-    if (!isLoading && apiKeys?.length === 0) {
-        return <NoDataFound />;
-    }
-
     if (error) {
         return <NoDataFound content={error.message} />;
     }
@@ -250,6 +246,7 @@ export default function Apikeys() {
                             ))}
                     </TableBody>
                 </Table>
+                {apiKeys.length === 0 && <NoDataFound content="No API Key found. Create a new one" />}
             </div>
             {
                 /** Render Modal for create and edit API Key */
