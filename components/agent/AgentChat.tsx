@@ -250,7 +250,7 @@ export default function ChatInterfaceAgent({ agentName, agentId, apiKey, isOpen,
                                         {chatData.map((item, idx) => (
                                             <div
                                                 key={idx}
-                                                className={`space-y-3 py-5 ${item.role === 'user' && 'border-y border-neutral-200 dark:border-neutral-600 '}`}
+                                                className={`space-y-3 py-5 ${item.role === 'user' && 'border-y border-neutral-200 dark:border-neutral-800 '}`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex items-start justify-center w-8 h-8 rounded-full">
