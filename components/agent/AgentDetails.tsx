@@ -23,8 +23,7 @@ const nextjsCode = `<!-- Next.js : Place this inside your layout.tsx -->
 <Script
   src='https://retriv.xyz/agent-widget.js'
   data-agent-id='111223334445555' // Agent Id
-  data-api-key='rt_1234456789' // API Key
-  data-base-url=https://retriv.xyz
+  data-base-url="https://retriv.xyz"
   data-name='YourAgentName' // Agent Name
   strategy='afterInteractive'
   async
@@ -34,8 +33,7 @@ const javascriptCode = `<!-- Vanilla JS - Place before </body> tag -->
 <script
   src="https://retriv.xyz/agent-widget.js"
   data-agent-id="111223334445555" // Agent Id
-  data-api-key="rt_1234456789" // API Key
-  data-base-url=https://retriv.xyz
+  data-base-url="https://retriv.xyz"
   data-name="YourAgentName" // Agent Name
   async
 ></script>`;
