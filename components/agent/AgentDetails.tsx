@@ -24,7 +24,6 @@ const nextjsCode = `<!-- Next.js : Place this inside your layout.tsx -->
   src='https://retriv.xyz/agent-widget.js'
   data-agent-id='111223334445555' // Agent Id
   data-base-url="https://retriv.xyz"
-  data-name='YourAgentName' // Agent Name
   strategy='afterInteractive'
   async
 />`;
@@ -34,7 +33,6 @@ const javascriptCode = `<!-- Vanilla JS - Place before </body> tag -->
   src="https://retriv.xyz/agent-widget.js"
   data-agent-id="111223334445555" // Agent Id
   data-base-url="https://retriv.xyz"
-  data-name="YourAgentName" // Agent Name
   async
 ></script>`;
 
