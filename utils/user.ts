@@ -4,6 +4,8 @@ import { toast } from 'sonner';
 import { resetLocalStorage } from '@/lib/storage';
 import { User } from '@/context/user.context';
 import { AxiosError } from 'axios';
+import { QueryClient } from '@tanstack/react-query';
+import { Dispatch, SetStateAction } from 'react';
 
 const fetchUser = async (): Promise<User> => {
     try {
@@ -35,8 +37,13 @@ const fetchUser = async (): Promise<User> => {
     }
 };
 
-const handleLogout = async (router: AppRouterInstance) => {
+const handleLogout = async (
+    router: AppRouterInstance,
+    queryClient: QueryClient,
+    setIsLoggingOut: Dispatch<SetStateAction<boolean>>,
+) => {
     try {
+        setIsLoggingOut(true);
         const response = await AxiosInstance.post(
             '/api/v1/auth/logout',
             {},
@@ -45,14 +52,17 @@ const handleLogout = async (router: AppRouterInstance) => {
             },
         );
         if (response.data.success === true) {
-            router.push('/login');
             resetLocalStorage('user_fullname');
             resetLocalStorage('user_email');
-
+            queryClient.removeQueries({ queryKey: ['user'] });
+            router.push('/login');
             toast(response.data.message);
         }
     } catch (err: unknown) {
-        console.error(err);
+        toast.error('Failed to logout. Try again');
+        console.error(`Failed to logout ${err}`);
+    } finally {
+        setIsLoggingOut(false);
     }
 };
 
