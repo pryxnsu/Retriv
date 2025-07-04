@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Globe, BarChart, Bot, Hammer, Clock9, Copy, Check, Brain } from 'lucide-react';
+import { Globe, BarChart, Bot, Hammer, Clock9, Copy, Check, Clock12 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { timeAgo } from '@/helper/time';
 import { AgentProps } from './AgentDashboard';
@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { getLocalStorage } from '@/lib/storage';
-import { Alert, AlertDescription } from '../ui/alert';
+import DataUpdatingAlert from '../DataUpdatingAlert';
 
 interface IntegrationCodeProp {
     title: string;
@@ -103,12 +103,13 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-4 pt-4">
-                    <Alert>
-                        <Brain />
-                        <AlertDescription>
-                            We&apos;re updating your agent’s data. This may take a few minutes.
-                        </AlertDescription>
-                    </Alert>
+                    {/* Show the data updation alert  */}
+                    {
+                        <DataUpdatingAlert
+                            icon={<Clock12 />}
+                            content="We're updating your agent’s data. This may take a few minutes."
+                        />
+                    }
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
                         <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

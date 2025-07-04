@@ -11,6 +11,8 @@ import Loader from '@/components/Loader';
 import { AxiosError } from 'axios';
 import BuySubscription from '@/components/BuySubscription';
 import { useQuery } from '@tanstack/react-query';
+import { Clock12 } from 'lucide-react';
+import DataUpdatingAlert from '../DataUpdatingAlert';
 
 interface QueryProp {
     id: string;
@@ -92,7 +94,13 @@ export default function Queries() {
                         <p className="font-semibold text-2xl">User query&apos;s</p>
                     </div>
                 </div>
-
+                {/* Show Data updation message when user has subscription  */}
+                {queries.length > 0 && (
+                    <DataUpdatingAlert
+                        icon={<Clock12 />}
+                        content="We're updating your queries. This may take a few minutes."
+                    />
+                )}
                 {/* Body  */}
                 <div className="mt-6">
                     <Table>
