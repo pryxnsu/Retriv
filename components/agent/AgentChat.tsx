@@ -1,22 +1,14 @@
 'use client';
 
 import { z } from 'zod';
-import { SendHorizontal, Sparkles, UserCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useState, useEffect, useRef } from 'react';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChatInputSchema } from '@/types';
-import { ScrollArea } from '../ui/scroll-area';
-import SkeletonBar from '../Skeleton/skeleton';
-import { MarkdownRenderer } from '../Markdown';
-import Link from 'next/link';
 import { getSessionStorage, setSessionStorage } from '@/lib/storage';
-import { inter } from '../../lib/fonts/fonts';
-import { Textarea } from '../ui/textarea';
 import { AxiosError } from 'axios';
-import ErrorMessage from '../ChatErrorMessage';
+import AIChatInterface from '../AIChatInterface';
+import AxiosInstance from '@/utils/axiosInstance';
 
 interface Message {
     content: string;
@@ -30,10 +22,42 @@ interface ChatDataProps {
 }
 
 interface ChatInterfaceAgentProps {
-    agentName: string;
     agentId: string;
     isOpen: boolean;
     onClose: () => void;
+}
+
+function useFetchExampleQuestions(agentId: string) {
+    const [agentName, setAgentName] = useState<string | null>(null);
+    const [exampleQuestions, setExampleQuestions] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!agentId) return;
+            try {
+                const response = await AxiosInstance.get(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/agent/example-questions/${agentId}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    },
+                );
+                if (response.data.success == true) {
+                    setAgentName(response.data.data.name);
+                    setExampleQuestions(response.data.data.questions);
+                }
+                return response.data.data;
+            } catch (err) {
+                console.error(`Failed to fetch chat. Please try again. ${err}`);
+            }
+        };
+        fetchData();
+    }, [agentId]);
+
+    return {
+        exampleQuestions,
+        name: agentName,
+    };
 }
 
 /**
@@ -52,23 +76,30 @@ function useClearConversationIdOnRefresh() {
     }, []);
 }
 
-export default function ChatInterfaceAgent({ agentName, agentId, isOpen, onClose }: ChatInterfaceAgentProps) {
+export default function ChatInterfaceAgent({ agentId, isOpen, onClose }: ChatInterfaceAgentProps) {
     useClearConversationIdOnRefresh();
-
     const RETRIV_URL = process.env.NEXT_PUBLIC_RETRIV_URL || '';
     const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
+
+    const { name, exampleQuestions } = useFetchExampleQuestions(agentId);
+
     const [isStreaming, setIsStreaming] = useState(false);
     const [sourcesUrl, setSourcesUrl] = useState<string[]>([]);
-    const [chatData, setChatData] = useState<ChatDataProps[]>([
-        {
-            content: `Hey! I’m the ${agentName} AI assistant, trained on our documentation and help articles. How can I support you today?`,
-            role: 'assistant',
-        },
-    ]);
+    const [chatData, setChatData] = useState<ChatDataProps[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLTextAreaElement>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
+    useEffect(() => {
+        setChatData([
+            {
+                content: `Hey there! I’m ${name}, an AI assistant trained on docs and help content. What can I help you with today?`,
+                role: 'assistant',
+            },
+        ]);
+    }, [name]);
 
     // Scroll to bottom when messages change
     useEffect(() => {
@@ -221,142 +252,27 @@ export default function ChatInterfaceAgent({ agentName, agentId, isOpen, onClose
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [isOpen, onClose]);
+
+    if (!agentId) {
+        return <div className="flex justify-center items-center h-full w-full">Loading....</div>;
+    }
     return (
         <>
             {isOpen && (
-                <div
-                    className={`${inter.className} backdrop-blur-xs p-4 md:p-8 fixed inset-0 flex justify-center items-start z-[99999] animate-fade-in`}
-                >
-                    <style jsx global>{`
-                        html,
-                        body {
-                            margin: 0;
-                            padding: 0;
-                            background: #fff2;
-                        }
-                    `}</style>
-
-                    <div className="px-5 py-1 flex flex-col border border-gray-200 dark:border-muted shadow-xl rounded-md w-full bg-white dark:bg-[#212121] max-w-screen h-[84vh] md:w-[min(600px,100%)] lg:w-[min(720px,100%)] 2xl:w-[min(760px,100%)] z-[99999]">
-                        <div>
-                            <div className="text-neutral-500 text-sm py-3">Ask AI</div>
-                        </div>
-                        {/* Chat Messages Area */}
-                        <div className="flex-1 min-h-0">
-                            {chatData.length > 0 && (
-                                <ScrollArea className="h-full rounded-xl px-5">
-                                    <div className="space-y-4">
-                                        {chatData.map((item, idx) => (
-                                            <div
-                                                key={idx}
-                                                className={`space-y-3 py-5 ${item.role === 'user' && 'border-y border-neutral-200 dark:border-neutral-800 '}`}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex items-start justify-center w-8 h-8 rounded-full">
-                                                        {item.role === 'user' ? (
-                                                            <UserCircle className="h-5 w-5 text-black dark:text-white mt-2" />
-                                                        ) : (
-                                                            <Sparkles className="h-5 w-5 text-black dark:text-white mt-2" />
-                                                        )}
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        {item.role === 'assistant' ? (
-                                                            <MarkdownRenderer content={item.content} />
-                                                        ) : (
-                                                            <p className="text-sm break-words">{item.content}</p>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {/* Sources */}
-                                                {item.sources && item.sources?.length > 0 && (
-                                                    <div className="flex flex-wrap gap-3">
-                                                        {item.sources.map((source, i) => (
-                                                            <Button
-                                                                key={i}
-                                                                variant="outline"
-                                                                className="h-auto py-2 px-3 text-sm rounded-lg shadow-none hover:bg-muted border"
-                                                            >
-                                                                <Link href={source} target="_blank">
-                                                                    {source}
-                                                                </Link>
-                                                            </Button>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-
-                                        {isLoading && <SkeletonBar />}
-                                        <div ref={messagesEndRef} />
-                                    </div>
-                                    {error && (
-                                        <div className="space-y-2 mb-3">
-                                            <ErrorMessage err={error} />
-                                        </div>
-                                    )}
-                                </ScrollArea>
-                            )}
-                        </div>
-
-                        {/* Input Header */}
-                        <div className="flex-shrink-0 py-t py-2 px-5">
-                            <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-                                    <div className="bg-gray-50 dark:bg-muted gap-3 shadow-md w-full flex justify-between items-center rounded-lg px-2">
-                                        <FormField
-                                            control={form.control}
-                                            name="query"
-                                            render={({ field }) => (
-                                                <FormItem className="w-full rounded-none py-2">
-                                                    <FormControl>
-                                                        <Textarea
-                                                            {...field}
-                                                            ref={(e) => {
-                                                                field.ref(e);
-                                                                inputRef.current = e;
-                                                            }}
-                                                            className="min-h-[unset] overflow-hidden w-full resize-none dark:bg-muted placeholder:text-gray-500 dark:placeholder:text-gray-dark-200 border-none outline-none shadow-none px-3 py-2 ml-1 mr-2 max-h-[200px] overflow-y-auto disabled:cursor-not-allowed focus:border-0 active:border-0 focus-visible:ring-0 "
-                                                            placeholder="Enter your query..."
-                                                            disabled={isLoading || isStreaming || error !== null}
-                                                            onKeyDown={(e) => {
-                                                                if (e.key == 'Enter' && !e.shiftKey) {
-                                                                    e.preventDefault();
-                                                                    form.handleSubmit(onSubmit)();
-                                                                } else if (e.key == 'Enter' && e.shiftKey) {
-                                                                    e.preventDefault();
-                                                                }
-                                                            }}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <Button
-                                            type="submit"
-                                            size="icon"
-                                            className="h-10 w-10 bg-transparent hover:bg-neutral-50 dark:hover:bg-black-80  shadow-none rounded-lg text-black dark:text-white dark:hover:text-black cursor-pointer"
-                                            disabled={isLoading || isStreaming || !query.trim() || error !== null}
-                                        >
-                                            <SendHorizontal size={30} />
-                                            <span className="sr-only">Send message</span>
-                                        </Button>
-                                    </div>
-                                </form>
-                            </Form>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="flex-shrink-0 p-3">
-                            <div className="text-neutral-400 text-xs text-right tracking-tighter">
-                                Powered by{' '}
-                                <Link href={RETRIV_URL} className="font-medium hover:text-neutral-600">
-                                    Retriv
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <AIChatInterface
+                    chatData={chatData}
+                    isLoading={isLoading}
+                    isStreaming={isStreaming}
+                    error={error}
+                    form={form}
+                    onSubmit={onSubmit}
+                    name={name || ''}
+                    exampleQuestions={exampleQuestions as []}
+                    query={query}
+                    RETRIV_URL={RETRIV_URL}
+                    inputRef={inputRef}
+                    messagesEndRef={messagesEndRef}
+                />
             )}
         </>
     );
