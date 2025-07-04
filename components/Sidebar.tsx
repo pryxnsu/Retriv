@@ -9,6 +9,9 @@ import { User, useUser } from '@/context/user.context';
 import UserProfile from './UserProfile';
 import { handleLogout } from '@/utils/user';
 import EmailNotVerifiedNotice from './EmailVerification';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import LogoutOverlay from './LogoutOverlay';
 
 export const item = [
     {
@@ -36,11 +39,14 @@ export const item = [
 export default function Sidebar() {
     const router = useRouter();
     const pathname = usePathname();
+    const queryClient = useQueryClient();
+    const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
     const { user, isLoading, error } = useUser();
     return (
         <>
             {/* Showing verify email component  */}
             {!isLoading && <EmailNotVerifiedNotice />}
+            {isLoggingOut && <LogoutOverlay/>}
             <nav className="mt-2 flex-1">
                 <div className={`flex justify-between px-2 mb-8 ${orbitron.className}`}>
                     <span className="text-2xl font-semibold">Retriv</span>
@@ -50,7 +56,7 @@ export default function Sidebar() {
                     user={user as User}
                     isLoading={isLoading}
                     error={error}
-                    handleLogout={() => handleLogout(router)}
+                    handleLogout={() => handleLogout(router, queryClient, setIsLoggingOut)}
                 />
                 <ul className="mt-8">
                     {item.map((item) => (

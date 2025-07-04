@@ -8,6 +8,9 @@ import { User, useUser } from '@/context/user.context';
 import { handleLogout } from '@/utils/user';
 import { usePathname, useRouter } from 'next/navigation';
 import { item } from './Sidebar';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import LogoutOverlay from './LogoutOverlay';
 
 interface MobileMenuItemsProps {
     onItemClick: () => void;
@@ -16,9 +19,12 @@ interface MobileMenuItemsProps {
 export default function MobileMenuItems({ onItemClick }: MobileMenuItemsProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const queryClient = useQueryClient();
+    const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
     const { user, isLoading, error } = useUser();
     return (
-        <div className="fixed bg-[#F9F6F0] dark:bg-black h-full w-full  z-40 overflow-hidden">
+        <div className="fixed bg-[#F9F6F0] dark:bg-black h-full w-full z-50 overflow-hidden">
+            {isLoggingOut && <LogoutOverlay />}
             <div className="my-6 mx-8">
                 <h3 className="text-sm font-semibold text-black/60 dark:text-white/60 uppercase tracking-wider">
                     Navigation
@@ -57,7 +63,7 @@ export default function MobileMenuItems({ onItemClick }: MobileMenuItemsProps) {
                     user={user as User}
                     isLoading={isLoading}
                     error={error}
-                    handleLogout={() => handleLogout(router)}
+                    handleLogout={() => handleLogout(router, queryClient, setIsLoggingOut)}
                 />
             </div>
         </div>
