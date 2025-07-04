@@ -18,7 +18,6 @@
 
         const agentId = script?.getAttribute('data-agent-id');
         const baseUrl = script?.getAttribute('data-base-url');
-        const agentName = script?.getAttribute('data-name');
 
         if (!agentId || !baseUrl) {
             console.error('Missing widget attributes:', { agentId, baseUrl });
@@ -119,7 +118,6 @@
                         type: 'INIT_CHAT',
                         payload: {
                             agentId,
-                            agentName,
                         },
                     },
                     '*',
