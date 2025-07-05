@@ -13,12 +13,12 @@ const EmailNotVerifiedNotice = () => {
                 <div className="flex items-center justify-center py-4">
                     <div className="h-8 flex items-center space-x-3">
                         <div className="flex-shrink-0">
-                            <AlertTriangle className="h-5 w-5 text-white" />
+                            <AlertTriangle className="h-5 w-5 text-black dark:text-white" />
                         </div>
                         <div className="flex-1">
-                            <p className="text-sm font-semibold text-white">
+                            <p className="text-sm font-semibold text-black dark:text-white">
                                 Your email is not verified.{' '}
-                                <span className="text-white">
+                                <span className="text-black dark:text-white">
                                     Please check your inbox and verify your email address to access all features.
                                 </span>
                             </p>
