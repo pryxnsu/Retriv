@@ -27,7 +27,7 @@ export const item = [
     {
         icon: <UserRoundSearch />,
         title: 'Query',
-        link: '/query',
+        link: '/query?page=1',
     },
     {
         icon: <Settings2 />,
