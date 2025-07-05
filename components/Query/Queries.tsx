@@ -208,54 +208,56 @@ export default function Queries() {
                 </div>
 
                 {/* Pagination  */}
-                <div className="mt-auto">
-                    <Pagination>
-                        <PaginationContent>
-                            <Pagination>
-                                <PaginationContent>
-                                    <PaginationItem>
-                                        <PaginationPrevious
-                                            href={`/query?page=${Math.max(currentPage - 1, 1)}`}
-                                            aria-disabled={currentPage === 1}
-                                            className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                                        />
-                                    </PaginationItem>
+                {queries.length > 0 && (
+                    <div className="mt-auto">
+                        <Pagination>
+                            <PaginationContent>
+                                <Pagination>
+                                    <PaginationContent>
+                                        <PaginationItem>
+                                            <PaginationPrevious
+                                                href={`/query?page=${Math.max(currentPage - 1, 1)}`}
+                                                aria-disabled={currentPage === 1}
+                                                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                                            />
+                                        </PaginationItem>
 
-                                    {pagesToRender.map((item, idx) => {
-                                        if (item === 'start-ellipsis' || item === 'end-ellipsis') {
+                                        {pagesToRender.map((item, idx) => {
+                                            if (item === 'start-ellipsis' || item === 'end-ellipsis') {
+                                                return (
+                                                    <PaginationItem key={item + idx}>
+                                                        <PaginationEllipsis />
+                                                    </PaginationItem>
+                                                );
+                                            }
+
                                             return (
-                                                <PaginationItem key={item + idx}>
-                                                    <PaginationEllipsis />
+                                                <PaginationItem key={item}>
+                                                    <PaginationLink
+                                                        href={`/query?page=${item}`}
+                                                        isActive={currentPage === item}
+                                                    >
+                                                        {item}
+                                                    </PaginationLink>
                                                 </PaginationItem>
                                             );
-                                        }
+                                        })}
 
-                                        return (
-                                            <PaginationItem key={item}>
-                                                <PaginationLink
-                                                    href={`/query?page=${item}`}
-                                                    isActive={currentPage === item}
-                                                >
-                                                    {item}
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                        );
-                                    })}
-
-                                    <PaginationItem>
-                                        <PaginationNext
-                                            href={`/query?page=${Math.min(currentPage + 1, totalPages)}`}
-                                            aria-disabled={currentPage >= totalPages}
-                                            className={
-                                                currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''
-                                            }
-                                        />
-                                    </PaginationItem>
-                                </PaginationContent>
-                            </Pagination>
-                        </PaginationContent>
-                    </Pagination>
-                </div>
+                                        <PaginationItem>
+                                            <PaginationNext
+                                                href={`/query?page=${Math.min(currentPage + 1, totalPages)}`}
+                                                aria-disabled={currentPage >= totalPages}
+                                                className={
+                                                    currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''
+                                                }
+                                            />
+                                        </PaginationItem>
+                                    </PaginationContent>
+                                </Pagination>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
+                )}
             </div>
         </div>
     );
