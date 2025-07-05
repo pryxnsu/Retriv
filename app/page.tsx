@@ -59,17 +59,17 @@ export default function Home() {
                             </div>
 
                             {/* AI Demo Card */}
-                            <div className="max-w-5xl mx-auto">
-                                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-black border-gray-200 dark:border-gray-800 shadow-2xl overflow-hidden">
+                            <div className="max-w-4xl mx-auto">
+                                <Card className="bg-neutral-900 border-gray-200 dark:border-neutral-800 shadow-2xl overflow-hidden">
                                     <div className="px-6 py-2 space-y-8">
                                         {/* User Query */}
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
                                                     <User className="h-5 w-5 text-white" />
                                                 </div>
                                                 <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                                                    Customer Question
+                                                    User Question
                                                 </span>
                                             </div>
                                             <div className="ml-14">
@@ -84,7 +84,7 @@ export default function Home() {
                                         {/* Processing */}
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 shadow-lg">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 shadow-lg">
                                                     <Loader2 className="h-5 w-5 text-white animate-spin" />
                                                 </div>
                                                 <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
@@ -104,7 +104,7 @@ export default function Home() {
                                         {/* AI Response */}
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
+                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
                                                     <CheckCircle className="h-5 w-5 text-white" />
                                                 </div>
                                                 <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
