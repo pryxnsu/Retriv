@@ -1,7 +1,6 @@
 'use client';
 
-import { CheckCircle, Loader2, Sparkles, User } from 'lucide-react';
-import Footer from '@/components/Footer';
+import { CheckCircle, Loader2, User } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/Hero';
 import MonitorQueries from '@/components/Monitor';
@@ -10,6 +9,8 @@ import SkeletonBar from '@/components/Skeleton/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { Toaster } from '@/components/ui/sonner';
+import Footer from '@/components/Footer';
 
 const Faq = [
     {
@@ -37,92 +38,109 @@ const Faq = [
 export default function Home() {
     return (
         <>
-            <div className="bg-[#F9F6F0] dark:bg-black">
+            <div className="min-h-screen bg-[#F9F6F0] dark:bg-black">
                 <Header />
-                <main className="min-h-screen">
+
+                <main>
+                    {/* Hero Section */}
                     <HeroSection />
 
-                    {/* Features  */}
-                    <section className="bg-white dark:bg-[#0C0C0C] px-4 border-y border-border py-24">
-                        <div>
-                            <p className="text-4xl sm:text-5xl font-semibold text-start sm:text-center mb-12">
-                                Retrieve your personal assistant
-                            </p>
-                        </div>
-                        <div>
-                            <div className="mx-auto max-w-4xl">
-                                <Card className="border-neutral-400 dark:border-neutral-800 bg-muted/20 backdrop-blur-sm p-0 gap-0">
-                                    {/* Header */}
-                                    <div className="flex items-center gap-3 border-b border-neutral-400 dark:border-neutral-800 p-4">
-                                        <div className="flex items-center gap-2 text-black dark:text-slate-300">
-                                            <Sparkles className="h-4 w-4" />
-                                            <span className="font-medium">Your personal assistant</span>
-                                        </div>
-                                    </div>
+                    {/* Features Section */}
+                    <section className="py-32 px-4 bg-gradient-to-b from-[#F9F6F0] to-[#eee9dd] dark:from-black dark:to-gray-950">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="text-center mb-20">
+                                <h2 className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                                    Your Personal AI Assistant
+                                </h2>
+                                <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                                    See how Retriv transforms customer interactions with intelligent, context-aware
+                                    responses
+                                </p>
+                            </div>
 
-                                    <div className="p-6 space-y-6">
-                                        {/* Query Section */}
-                                        <div className="space-y-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
-                                                    <User className="h-4 w-4 text-white" />
+                            {/* AI Demo Card */}
+                            <div className="max-w-5xl mx-auto">
+                                <Card className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-black border-gray-200 dark:border-gray-800 shadow-2xl overflow-hidden">
+                                    <div className="px-6 py-2 space-y-8">
+                                        {/* User Query */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg">
+                                                    <User className="h-5 w-5 text-white" />
                                                 </div>
-                                                <span className="text-sm font-medium text-black dark:text-slate-300">
-                                                    User asked
+                                                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                                                    Customer Question
                                                 </span>
                                             </div>
-                                            <div className="ml-11">
-                                                <p className="text-lg text-black dark:text-slate-300 leading-relaxed">
-                                                    How can i add Retriv on my website ?
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Processing Section */}
-                                        <div className="space-y-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-600">
-                                                    <Loader2 size={17} className="text-white animate-spin" />
+                                            <div className="ml-14">
+                                                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+                                                    <p className="text-lg text-gray-900 dark:text-white font-medium">
+                                                        How can I add Retriv to my website?
+                                                    </p>
                                                 </div>
-                                                <span className="text-sm font-medium text-black dark:text-slate-300">
-                                                    Analysis
-                                                </span>
-                                            </div>
-                                            <div className="ml-11 space-y-2">
-                                                <SkeletonBar />
                                             </div>
                                         </div>
 
-                                        {/* Response Section */}
-                                        <div className="space-y-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-600">
-                                                    <CheckCircle className="h-4 w-4 text-white" />
+                                        {/* Processing */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 shadow-lg">
+                                                    <Loader2 className="h-5 w-5 text-white animate-spin" />
                                                 </div>
-                                                <span className="text-sm font-medium text-black dark:text-slate-300">
-                                                    Response...
+                                                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                                                    AI Processing
                                                 </span>
                                             </div>
-                                            <div className="ml-11">
-                                                <p className="text-black dark:text-slate-300 leading-relaxed">
-                                                    Here is the simple steps to setup Retriv on your website.
-                                                </p>
-                                                <SetupGuide />
+                                            <div className="ml-14">
+                                                <div className="space-y-3">
+                                                    <SkeletonBar />
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                        Analyzing your website content...
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* AI Response */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
+                                                    <CheckCircle className="h-5 w-5 text-white" />
+                                                </div>
+                                                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                                                    AI Response
+                                                </span>
+                                            </div>
+                                            <div className="ml-14">
+                                                <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                                                    <p className="text-lg text-gray-900 dark:text-white mb-4">
+                                                        Here are the simple steps to add Retriv to your website:
+                                                    </p>
+                                                    <SetupGuide />
+                                                </div>
                                             </div>
                                         </div>
 
                                         {/* Sources */}
-                                        <div className="ml-11">
+                                        <div className="ml-14">
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                                    Sources:
+                                                </span>
+                                            </div>
                                             <div className="flex flex-wrap gap-2">
-                                                {['retriv.xyz'].map((item, idx) => (
-                                                    <Badge
-                                                        key={idx}
-                                                        variant="secondary"
-                                                        className="text-slate-900 dark:text-slate-200"
-                                                    >
-                                                        {item}
-                                                    </Badge>
-                                                ))}
+                                                <Badge
+                                                    variant="outline"
+                                                    className="bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+                                                >
+                                                    📚 retriv.xyz
+                                                </Badge>
+                                                <Badge
+                                                    variant="outline"
+                                                    className="bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+                                                >
+                                                    🚀 retriv.xyz
+                                                </Badge>
                                             </div>
                                         </div>
                                     </div>
@@ -131,39 +149,59 @@ export default function Home() {
                         </div>
                     </section>
 
-                    {/* Monitor  */}
-                    <section className="px-4 py-24 border-b rounded-3xl mx-auto sm:py-24 max-w-5xl md:max-w-7xl">
-                        <div>
-                            <p className="px-2 text-4xl sm:text-5xl font-semibold text-start mb-12 mx-auto">
-                                Monitor your user&apos;s queries!
-                            </p>
+                    {/* Monitor Section */}
+                    <section className="py-32 px-4  dark:from-gray-950 dark:to-black">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="text-center mb-20">
+                                <h2 className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                                    Monitor User Interactions
+                                </h2>
+                                <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                                    Get insights into what your customers are asking and how your AI assistant is
+                                    helping them
+                                </p>
+                            </div>
+                            <div className="max-w-4xl mx-auto">
+                                <MonitorQueries />
+                            </div>
                         </div>
-                        <MonitorQueries />
                     </section>
 
-                    {/* FAQ  */}
-                    <section id="faq" className="w-full mx-auto py-24 px-2">
-                        <p className="px-2 sm:mx-auto w-full text-4xl sm:text-5xl font-semibold text-start sm:text-center mb-8">
-                            Frequenly asked questions
-                        </p>
-                        <div className="w-fit px-3 mx-auto flex justify-center items-center">
-                            <Accordion type="single" collapsible className="sm:w-2xl">
-                                {Faq.map((item) => (
-                                    <AccordionItem key={item.number} value={`item-${item.number}`}>
-                                        <AccordionTrigger className="text-xl font-semibold sm:max-w-2xl  hover:no-underline cursor-pointer">
-                                            {item.question}
-                                        </AccordionTrigger>
-                                        <AccordionContent className="text-typography-weak">
-                                            {item.answer}
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                ))}
-                            </Accordion>
+                    {/* FAQ Section */}
+                    <section id="faq" className="py-32 px-4  dark:from-black dark:to-gray-950">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="text-center mb-20">
+                                <h2 className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                                    Frequently Asked Questions
+                                </h2>
+                                <p className="text-xl text-gray-600 dark:text-gray-400">
+                                    Everything you need to know about Retriv
+                                </p>
+                            </div>
+
+                            <div className="w-fit px-3 mx-auto flex justify-center items-center">
+                                <Accordion type="single" collapsible className="sm:w-2xl">
+                                    {Faq.map((item) => (
+                                        <AccordionItem key={item.number} value={`item-${item.number}`}>
+                                            <AccordionTrigger className="text-xl font-semibold sm:max-w-2xl hover:no-underline cursor-pointer">
+                                                {item.question}
+                                            </AccordionTrigger>
+                                            <AccordionContent className="text-typography-weak">
+                                                {item.answer}
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    ))}
+                                </Accordion>
+                            </div>
                         </div>
                     </section>
                 </main>
+
+                {/* Footer */}
                 <Footer />
             </div>
+
+            <Toaster />
         </>
     );
 }
