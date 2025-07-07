@@ -13,6 +13,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { getLocalStorage } from '@/lib/storage';
 import DataUpdatingAlert from '../DataUpdatingAlert';
+import Feedback from '../Feedback';
 
 interface IntegrationCodeProp {
     title: string;
@@ -84,6 +85,9 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                             {agent.status}
                         </Badge>
                     </div>
+                </div>
+                <div>
+                    <Feedback />
                 </div>
             </div>
 
