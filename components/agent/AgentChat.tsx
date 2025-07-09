@@ -23,6 +23,7 @@ interface ChatDataProps {
 
 interface ChatInterfaceAgentProps {
     agentId: string;
+    origin: string;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -76,7 +77,7 @@ function useClearConversationIdOnRefresh() {
     }, []);
 }
 
-export default function ChatInterfaceAgent({ agentId, isOpen, onClose }: ChatInterfaceAgentProps) {
+export default function ChatInterfaceAgent({ agentId, origin, isOpen, onClose }: ChatInterfaceAgentProps) {
     useClearConversationIdOnRefresh();
     const RETRIV_URL = process.env.NEXT_PUBLIC_RETRIV_URL || '';
     const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
@@ -143,8 +144,8 @@ export default function ChatInterfaceAgent({ agentId, isOpen, onClose }: ChatInt
                     agentId: agentId,
                     query: data.query,
                     conversationId: id || '',
+                    origin: origin,
                 }),
-                referrerPolicy: 'origin',
             });
             form.reset();
 

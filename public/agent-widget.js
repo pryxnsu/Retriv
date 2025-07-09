@@ -9,7 +9,7 @@
         }
     }
 
-    function initChatWidget() {
+    async function initChatWidget() {
         const html = document.querySelector('html');
         const theme = html.getAttribute('class');
 
@@ -23,6 +23,8 @@
             console.error('Missing widget attributes:', { agentId, baseUrl });
             return;
         }
+
+        const _origin = window.location.origin;
 
         // Create the button
         const button = document.createElement('button');
@@ -39,6 +41,7 @@
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            gap: '5px',
             background: theme == 'light' ? '#FDFBF9' : '#191919',
             color: theme == 'light' ? 'black' : 'white',
             fontWeight: '500',
@@ -60,11 +63,7 @@
         });
 
         const buttonContent = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" 
-                viewBox="0 0 24 24" stroke="currentColor" style="vertical-align: middle; margin-right: 6px;">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot-icon lucide-bot"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
             Ask AI
         `;
 
@@ -118,6 +117,7 @@
                         type: 'INIT_CHAT',
                         payload: {
                             agentId,
+                            origin: _origin,
                         },
                     },
                     '*',

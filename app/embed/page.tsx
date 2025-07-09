@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function EmbedChatPage() {
     const [agentId, setAgentId] = useState<string>('');
+    const [origin, setOrigin] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -21,13 +22,14 @@ export default function EmbedChatPage() {
     useEffect(() => {
         const listener = (event: MessageEvent) => {
             if (event.data?.type === 'INIT_CHAT') {
-                const { agentId } = event.data.payload;
-                if (!agentId) {
+                const { agentId, origin } = event.data.payload;
+                if (!agentId || !origin) {
                     alert('You cannot do chat with this agent. Invalid agent id or name or api key');
                     window.parent.postMessage({ type: 'CLOSE_CHAT_IFRAME' }, '*');
                     return;
                 }
                 setAgentId(agentId);
+                setOrigin(origin);
             }
         };
 
@@ -59,7 +61,7 @@ export default function EmbedChatPage() {
                     </div>
                 </div>
             )}
-            <ChatInterfaceAgent agentId={agentId} isOpen={isOpen} onClose={handleClose} />
+            <ChatInterfaceAgent agentId={agentId} origin={origin} isOpen={isOpen} onClose={handleClose} />
         </div>
     );
 }
