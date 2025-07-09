@@ -11,7 +11,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Sparkles, SendHorizontal, Info, User, Brain } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { MarkdownRenderer } from './Markdown';
 import SkeletonBar from './Skeleton/skeleton';
 import ErrorMessage from './ChatErrorMessage';
@@ -75,14 +74,12 @@ export default function AIChatInterface({
                 <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-neutral-800 z-50">
                     <div className="flex items-center gap-2">
                         <div className="text-neutral-500 text-sm">Ask AI</div>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Info className="h-4 w-4 text-neutral-400" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p className="z-100">This is AI. This may produce wrong information</p>
-                            </TooltipContent>
-                        </Tooltip>
+                        <div className="relative group">
+                            <Info className="h-4 w-4 text-neutral-400" />
+                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max bg-black text-white text-xs rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                This may produce wrong information.
+                            </div>
+                        </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button
