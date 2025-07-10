@@ -47,7 +47,7 @@ async function verify(agentId) {
 
         const _origin = window.location.origin;
 
-        const isVerified = await verify(agentId, apiUrl);
+        const isVerified = await verify(agentId);
         if (!isVerified) {
             console.warn('Unauthorized origin.');
             return;
