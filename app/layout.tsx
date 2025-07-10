@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { inter } from '@/lib/fonts/fonts';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '../components/providers/themeProvider';
-import GoogleProviderWrapper from '../components/providers/googleProvider';
 import { ThemeWatcher } from '@/components/ThemeWatcher';
 import { QueryProvider } from '@/components/providers/queryClientProvider';
 
@@ -61,13 +60,11 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <QueryProvider>
-                    <GoogleProviderWrapper>
-                        <ThemeProvider>
-                            <ThemeWatcher />
-                            {children}
-                            <Toaster />
-                        </ThemeProvider>
-                    </GoogleProviderWrapper>
+                    <ThemeProvider>
+                        <ThemeWatcher />
+                        {children}
+                        <Toaster />
+                    </ThemeProvider>
                 </QueryProvider>
             </body>
         </html>
