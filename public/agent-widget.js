@@ -1,3 +1,24 @@
+async function verify(agentId) {
+    const searchParams = new URLSearchParams({ agent_id: agentId });
+    const RETRIV_API_BASE = 'https://api.retriv.xyz';
+    try {
+        const response = await fetch(`${RETRIV_API_BASE}/verify-embed?${searchParams.toString()}`, {
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            console.warn('Widget verification failed! Unauthorized embed');
+            return false;
+        }
+
+        const data = await response.json();
+        return data.success === true;
+    } catch (err) {
+        console.error('Verification error:', err);
+        return false;
+    }
+}
+
 (async function () {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initChatWidget);
@@ -25,6 +46,14 @@
         }
 
         const _origin = window.location.origin;
+
+        const isVerified = await verify(agentId, apiUrl);
+        if (!isVerified) {
+            console.warn('Unauthorized origin.');
+            return;
+        } else {
+            console.log('Verification successful');
+        }
 
         // Create the button
         const button = document.createElement('button');
