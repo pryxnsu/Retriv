@@ -2,7 +2,7 @@
 
 ![Retriv Image](public/og-image.png)
 
-Retriv is a no-code platform that lets businesses create and embed their own AI agents in minutes. These agents can answer visitor questions by understanding and retrieving information from website content.
+Retriv helps you to add smart AI chatbots to your website without writing any code. 
 
 ## **Features**
 
@@ -33,7 +33,7 @@ Retriv is a no-code platform that lets businesses create and embed their own AI 
 
 ## **Demo Video**
 
-[![WatchDemo](https://raw.githubusercontent.com/priyanshuxkumar/retriv-web/e0e56eaabf38e1bcf7ece9526610be4f97da223c/public/thumbnail.png)](https://youtu.be/_V30qqdX1p4)
+[![WatchDemo](public/thumbnail.png)](https://youtu.be/_V30qqdX1p4)
 
 I embedded it on my portfolio website where you can see the agent being embedded and responding based on my website data.
 
