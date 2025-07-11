@@ -72,9 +72,9 @@ export default function UserProfile({ user, isLoading, error, handleLogout }: Us
                 ) : (
                     <>
                         <Avatar className="h-10 w-10 rounded-md border">
-                            <AvatarImage src={user?.userMetadata.avatarUrl} />
-                            <AvatarFallback className="rounded-md bg-primary/10 text-primary">
-                                {user?.userMetadata.name[0].toUpperCase()}
+                            <AvatarImage src={user?.userMetadata.avatarUrl} alt={`${user.userMetadata.name ?? 'User'} avatar`}/>
+                            <AvatarFallback delayMs={600} className="rounded-md bg-primary/10 text-primary">
+                                {user?.userMetadata.name[0].toUpperCase() ?? 'U'}
                             </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
