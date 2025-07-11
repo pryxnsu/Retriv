@@ -26,7 +26,7 @@ export function HeroSection() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         {' '}
                         <Link
-                            href={'/signup'}
+                            href={'/login'}
                             className="inline-flex h-11 items-center gap-2 px-3 rounded-lg bg-secondary text-secondary-foreground border border-input hover:border-ring transition-all"
                         >
                             <Button variant="secondary" className="border-none shadow-none text-lg">
