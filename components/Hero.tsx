@@ -1,42 +1,46 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import lightHero from '@/public/hero.png';
+
 
 export function HeroSection() {
     return (
-        <section className="relative py-32 overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-600/20 rounded-full blur-3xl"></div>
-            </div>
-
-            <div className="relative z-10 max-w-6xl mx-auto px-6">
-                <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-950/50 dark:to-purple-950/50 border border-blue-200 dark:border-blue-800 mb-8">
-                        <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                        <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                            AI-Powered Website Assistant
-                        </span>
-                    </div>
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Make your website smarter.</h1>{' '}
-                    <p className="text-gray-800 dark:text-white text-xl mb-8 max-w-2xl mx-auto">
-                        Transform your website content into an intelligent assistant that answers customer questions
-                        accurately and instantly.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        {' '}
-                        <Link
-                            href={'/login'}
-                            className="inline-flex h-11 items-center gap-2 px-3 rounded-lg bg-secondary text-secondary-foreground border border-input hover:border-ring transition-all"
-                        >
-                            <Button variant="secondary" className="border-none shadow-none text-lg">
-                                Try now
-                                <ArrowUpRight />
+        <div className="mt-15 sm:mt-20 z-10 w-full px-6 flex justify-center">
+                    <div className="text-center mb-6 max-w-3xl w-full mx-auto">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 tracking-tight max-w-3xl mx-auto">
+                            Make your website smarter.
+                        </h1>{' '}
+                        <p className="text-base sm:text-xl mb-8 max-w-2xl mx-auto">
+                            Transform your website content into an intelligent assistant that answers customer questions
+                            accurately and instantly.
+                        </p>
+                        <div className="flex gap-4 justify-center items-center">
+                            <Button
+                                asChild
+                                variant="default"
+                                className="border border-neutral-200 text-base gap-2 h-10 px-6 rounded-lg hover:shadow-sm"
+                            >
+                                <Link href="/login">
+                                    Try now
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </Link>
                             </Button>
-                        </Link>
+                        </div>
+                    </div>
+
+                    <div className="hidden sm:block w-11/12 absolute top-[50%]">
+                        <Image
+                            className="w-full rounded-2xl ring-8 ring-neutral-100 dark:ring-neutral-700"
+                            src={lightHero}
+                            alt="hero-section-img"
+                            width={1000}
+                            height={1000}
+                            priority={false}
+                        />
                     </div>
                 </div>
-            </div>
-        </section>
+        
     );
 }

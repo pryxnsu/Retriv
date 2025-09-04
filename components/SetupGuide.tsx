@@ -10,11 +10,11 @@ export default function SetupGuide() {
                     </span>
                     <span>Copy the script tag</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-2">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">
                         2
                     </span>
-                    <span>Paste it in your website&apos;s HTML</span>
+                    <span className="text-start">Paste it in your website&apos;s HTML</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-white text-xs font-bold">
