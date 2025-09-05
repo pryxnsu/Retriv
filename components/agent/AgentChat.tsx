@@ -132,6 +132,7 @@ export default function ChatInterfaceAgent({ agentId, origin, isOpen, onClose }:
         setChatData((prev) => [...prev, userMessage]);
         setIsLoading(true);
         setSourcesUrl([]);
+        setError(null);
 
         try {
             const id = getSessionStorage('cnvid');

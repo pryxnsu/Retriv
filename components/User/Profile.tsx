@@ -94,21 +94,18 @@ export default function Profile() {
     return (
         <div className="flex items-center justify-between mx-4 md:mx-26 md:mt-12">
             <div className="w-full">
-                {/* Header */}
                 <div className="flex items-center gap-3 my-8">
-                    <User className="h-6 w-6 text-black dark:text-white" />
-                    <h1 className="text-xl font-semibold text-black dark:text-white">Profile Information</h1>
+                    <User className="h-6 w-6 " />
+                    <h1 className="text-xl font-semibold ">Profile Information</h1>
                 </div>
 
-                {/* Body  */}
                 <div className="mt-6 space-y-4">
-                    {/* Profile Card */}
                     <div>
-                        <Card className="border shadow-none bg-white/80 dark:bg-muted">
+                        <Card className="shadow-none border bg-transparent border-neutral-300 dark:border-neutral-800 ">
                             <CardHeader className="flex gap-5 items-center text-center">
                                 <div className="flex justify-center">
                                     <div className="relative">
-                                        <Avatar className="h-20 w-20 border-2 border-white dark:border-black shadow-lg">
+                                        <Avatar className="h-20 w-20  border border-neutral-300 dark:border-neutral-800 shadow-lg">
                                             <AvatarImage src={user?.userMetadata.avatarUrl} />
                                             <AvatarFallback className="text-2xl font-bold">
                                                 {user?.userMetadata.name?.[0]?.toUpperCase()}
@@ -128,10 +125,10 @@ export default function Profile() {
                             </CardHeader>
                         </Card>
                     </div>
-                    {/* Form Card */}
+
                     <div>
                         <div>
-                            <Card className="border shadow-none bg-white/80 dark:bg-muted">
+                            <Card className="shadow-none bg-transparent border-neutral-300 dark:border-neutral-800 ">
                                 <CardHeader>
                                     <div className="flex items-center gap-2">
                                         <Edit3 className="h-5 w-5 text-slate-600 dark:text-slate-400" />
@@ -157,7 +154,7 @@ export default function Profile() {
                                                 name="fullName"
                                                 value={formData.fullName || ''}
                                                 onChange={handleChange}
-                                                className="h-11 border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-black"
+                                                className="h-11 border border-neutral-300 dark:border-neutral-800"
                                                 placeholder="Enter your full name"
                                             />
                                         </div>
@@ -175,7 +172,7 @@ export default function Profile() {
                                                 type="email"
                                                 value={formData.email || ''}
                                                 disabled
-                                                className="h-11 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-black text-slate-500"
+                                                className="h-11 border border-neutral-300 dark:border-neutral-800"
                                                 placeholder="Enter your email"
                                             />
                                             <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -184,12 +181,11 @@ export default function Profile() {
                                         </div>
                                     </div>
 
-                                    {/* Action Buttons */}
-                                    <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-slate-200 dark:border-slate-700">
+                                    <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-neutral-300 dark:border-neutral-800">
                                         <Button
                                             onClick={handleSave}
                                             disabled={formData.fullName === userFullName || isUpdating}
-                                            className="bg-[#556B2F] hover:bg-[#4A5F25] text-white shadow-lg hover:shadow-xl transition-all duration-200 h-11 px-6"
+                                            className="shadow-lg hover:shadow-xl transition-all duration-200 h-11 px-6"
                                         >
                                             {isUpdating ? (
                                                 <>

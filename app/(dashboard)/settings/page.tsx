@@ -20,16 +20,16 @@ export default function Settings() {
             </div>
 
             <Tabs defaultValue="general" className="w-full">
-                <TabsList className="sticky top-0 h-12 pb-0 grid w-full grid-cols-3 bg-[#F9F6F0] dark:bg-black border-none shadow-none rounded-none">
-                    <TabsTrigger value="general" className="flex items-center gap-2 border-b cursor-pointer">
+                <TabsList className="bg-transparent h-12 pb-0 grid w-full grid-cols-3 border-none shadow-none rounded-none">
+                    <TabsTrigger value="general" className="flex items-center gap-2 cursor-pointer">
                         <Settings2 className="h-4 w-4" />
                         <span className="hidden sm:inline">General</span>
                     </TabsTrigger>
-                    <TabsTrigger value="billing" className="flex items-center gap-2 border-b cursor-pointer">
+                    <TabsTrigger value="billing" className="flex items-center gap-2 cursor-pointer">
                         <CreditCard className="h-4 w-4" />
                         <span className="hidden sm:inline">Billing</span>
                     </TabsTrigger>
-                    <TabsTrigger value="account" className="flex items-center gap-2 border-b cursor-pointer">
+                    <TabsTrigger value="account" className="flex items-center gap-2 cursor-pointer">
                         <User className="h-4 w-4" />
                         <span className="hidden sm:inline">Account</span>
                     </TabsTrigger>

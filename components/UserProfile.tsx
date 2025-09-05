@@ -65,14 +65,17 @@ export default function UserProfile({ user, isLoading, error, handleLogout }: Us
         }
     };
     return (
-        <div className="flex items-center justify-between gap-4 rounded-lg bg-muted p-3">
+        <div className="flex items-center justify-between gap-3 rounded-lg p-3 border border-neutral-300 dark:border-neutral-800">
             <div className="flex items-center gap-3">
                 {error ? (
                     error
                 ) : (
                     <>
-                        <Avatar className="h-10 w-10 rounded-md border">
-                            <AvatarImage src={user?.userMetadata.avatarUrl} alt={`${user.userMetadata.name ?? 'User'} avatar`}/>
+                        <Avatar className="h-10 w-10 rounded-md border border-neutral-300 dark:border-neutral-800">
+                            <AvatarImage
+                                src={user?.userMetadata.avatarUrl}
+                                alt={`${user.userMetadata.name ?? 'User'} avatar`}
+                            />
                             <AvatarFallback delayMs={600} className="rounded-md bg-primary/10 text-primary">
                                 {user?.userMetadata.name[0].toUpperCase() ?? 'U'}
                             </AvatarFallback>
@@ -89,15 +92,18 @@ export default function UserProfile({ user, isLoading, error, handleLogout }: Us
                 )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent cursor-pointer">
                             <ChevronDown className="h-4 w-4" />
                             <span className="sr-only">Open menu</span>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuContent
+                        align="end"
+                        className="w-56 border border-neutral-300 dark:border-neutral-800 z-100 bg-background"
+                    >
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
@@ -125,11 +131,13 @@ export default function UserProfile({ user, isLoading, error, handleLogout }: Us
                                     <span>Pricing</span>
                                 </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <SunMoon className="mr-2 h-4 w-4" />
-                                <span>Theme</span>
+                            <DropdownMenuItem className="flex justify-between">
+                                <div className="flex items-center">
+                                    <SunMoon className="mr-2 h-4 w-4" />
+                                    <span>Theme</span>
+                                </div>
                                 <TooltipProvider delayDuration={300}>
-                                    <div className="flex items-center rounded-2xl border bg-background">
+                                    <div className="flex items-center rounded-2xl border bg-background border-neutral-300 dark:border-neutral-800">
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <Button
@@ -178,7 +186,7 @@ export default function UserProfile({ user, isLoading, error, handleLogout }: Us
                                 </TooltipProvider>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-neutral-300 dark:bg-neutral-800" />
                         <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
                             <LogOut className="mr-2 h-4 w-4" />
                             <span>Log out</span>

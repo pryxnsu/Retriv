@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -166,125 +165,267 @@ export default function SettingsGeneralTab() {
         return <NoDataFound content="To access these settings, please create an agent first." />;
     }
     return (
-        <>
-            <Card className="border-none shadow-none bg-transparent mb-0">
-                <CardHeader>
-                    <CardTitle>Basic Information</CardTitle>
-                    <CardDescription>View and manage your agent&apos;s basic information</CardDescription>
-                </CardHeader>
+        <div className="my-8 space-y-8 px-6">
+            {/* Basic Information Section */}
+            <div className="space-y-6">
+                <div className="space-y-2">
+                    <h2 className="text-xl font-semibold">Basic Information</h2>
+                    <p className="text-sm text-muted-foreground">View and manage your agent&aspo;s basic information</p>
+                </div>
 
-                <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label className="text-sm font-medium text-muted-foreground">Name</Label>
-                            <p className="font-medium">{generalSettings?.basicInfo.agentName}</p>
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-sm font-medium text-muted-foreground">Agent LLM</Label>
-                            <p className="font-medium">Open AI | Gemini</p>
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-sm font-medium text-muted-foreground">Source URL</Label>
-                            <p className="font-medium truncate">{generalSettings?.basicInfo?.sourceUrl}</p>
-                        </div>
-                        <div className="space-y-2">
-                            <Label className="text-sm font-medium text-muted-foreground">Status</Label>
-                            <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="bg-[#556B2F] text-white py-1 px-2 font-medium">
-                                    {generalSettings?.basicInfo?.status}
-                                </Badge>
-                            </div>
-                        </div>
-                        <div className="space-y-2 mb-4">
-                            <Label className="text-sm font-medium text-muted-foreground">Creation Date</Label>
-                            <p className="font-medium">
-                                {new Date(generalSettings?.basicInfo?.creationDate || '').toDateString()}
-                            </p>
+                <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-muted-foreground">Name</Label>
+                        <p className="font-medium">{generalSettings?.basicInfo.agentName}</p>
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-muted-foreground">Agent LLM</Label>
+                        <p className="font-medium">Open AI | Gemini</p>
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-muted-foreground">Source URL</Label>
+                        <p className="font-medium truncate">{generalSettings?.basicInfo?.sourceUrl}</p>
+                    </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-muted-foreground">Status</Label>
+                        <div className="flex items-center gap-2">
+                            <Badge
+                                variant="outline"
+                                className="py-1 px-2 font-medium border-neutral-300 dark:border-neutral-800 bg-muted-light dark:bg-muted-dark"
+                            >
+                                {generalSettings?.basicInfo?.status}
+                            </Badge>
                         </div>
                     </div>
-                    <Separator />
-                </CardContent>
-            </Card>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium text-muted-foreground">Creation Date</Label>
+                        <p className="font-medium">
+                            {new Date(generalSettings?.basicInfo?.creationDate || '').toDateString()}
+                        </p>
+                    </div>
+                </div>
+            </div>
 
+            <Separator />
+
+            {/* Response Settings Section */}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} onInvalid={() => console.log('Invalid')}>
-                    <Card className="border-none shadow-none bg-transparent">
-                        <CardHeader>
-                            <CardTitle>Response Settings</CardTitle>
-                            <CardDescription>Customize how your agent responds to queries</CardDescription>
-                        </CardHeader>
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <h2 className="text-xl font-semibold">Response Settings</h2>
+                            <p className="text-sm text-muted-foreground">
+                                Customize how your agent responds to queries
+                            </p>
+                        </div>
 
-                        <CardContent className="space-y-6">
-                            <div className="flex flex-col space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-0.5">
-                                        <Label htmlFor="response-length">Response Length</Label>
-                                        <p className="text-sm text-muted-foreground">
-                                            Choose how detailed you want the responses to be
-                                        </p>
-                                    </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="responseLength"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <FormControl>
-                                                        <SelectTrigger className="w-[180px]">
-                                                            <SelectValue placeholder="Select length" />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="Concise">Concise</SelectItem>
-                                                        <SelectItem value="Balanced">Balanced</SelectItem>
-                                                        <SelectItem value="Detailed">Detailed</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormItem>
-                                        )}
-                                    />
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-1">
+                                    <Label htmlFor="response-length" className="text-base font-medium">
+                                        Response Length
+                                    </Label>
+                                    <p className="text-sm text-muted-foreground">
+                                        Choose how detailed you want the responses to be
+                                    </p>
                                 </div>
-
-                                <Separator />
-
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-0.5">
-                                        <Label htmlFor="enable-sources">Enable Source Links</Label>
-                                        <p className="text-sm text-muted-foreground">
-                                            Include reference links in the agent&apos;s responses
-                                        </p>
-                                    </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="enableSources"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormControl>
-                                                    <Switch
-                                                        id="enable-sources"
-                                                        checked={field.value}
-                                                        onCheckedChange={field.onChange}
-                                                    />
+                                <FormField
+                                    control={form.control}
+                                    name="responseLength"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl className="border-neutral-300 dark:border-neutral-800">
+                                                    <SelectTrigger className="w-[180px]">
+                                                        <SelectValue placeholder="Select length" />
+                                                    </SelectTrigger>
                                                 </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                <Separator />
+                                                <SelectContent className="bg-background  border-neutral-300 dark:border-neutral-800 z-20">
+                                                    <SelectItem value="Concise">Concise</SelectItem>
+                                                    <SelectItem value="Balanced">Balanced</SelectItem>
+                                                    <SelectItem value="Detailed">Detailed</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
-                        </CardContent>
 
-                        <CardFooter className="flex justify-between">
-                            <Button onClick={resetSettingsToDefault} variant="destructive" className="cursor-pointer">
+                            <Separator />
+
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-1">
+                                    <Label htmlFor="enable-sources" className="text-base font-medium">
+                                        Enable Source Links
+                                    </Label>
+                                    <p className="text-sm text-muted-foreground">
+                                        Include reference links in the agent&aspo;s responses
+                                    </p>
+                                </div>
+                                <FormField
+                                    control={form.control}
+                                    name="enableSources"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl className="border-neutral-300 dark:border-neutral-800">
+                                                <Switch
+                                                    className="data-[state=checked]:bg-neutral-800 dark:data-[state=checked]:bg-white data-[state=unchecked]:bg-neutral-200 dark:data-[state=unchecked]:bg-neutral-700"
+                                                    id="enable-sources"
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </div>
+
+                        <Separator />
+
+                        <div className="flex justify-between pt-4">
+                            <Button
+                                onClick={resetSettingsToDefault}
+                                variant="destructive"
+                                type="button"
+                                className="cursor-pointer"
+                            >
                                 Reset to Defaults
                             </Button>
-                            <Button type="submit" className="bg-[#556B2F] text-white hover:bg-[#4A5F25] cursor-pointer">
+                            <Button
+                                type="submit"
+                                className="cursor-pointer bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:text-neutral-900"
+                            >
                                 Save Changes
                             </Button>
-                        </CardFooter>
-                    </Card>
+                        </div>
+                    </div>
                 </form>
             </Form>
-        </>
+        </div>
+        // <>
+        //     <Card className="border-none shadow-none bg-transparent mb-0">
+        //         <CardHeader>
+        //             <CardTitle>Basic Information</CardTitle>
+        //             <CardDescription>View and manage your agent&apos;s basic information</CardDescription>
+        //         </CardHeader>
+
+        //         <CardContent className="space-y-4">
+        //             <div className="grid grid-cols-2 gap-4">
+        //                 <div className="space-y-2">
+        //                     <Label className="text-sm font-medium text-muted-foreground">Name</Label>
+        //                     <p className="font-medium">{generalSettings?.basicInfo.agentName}</p>
+        //                 </div>
+        //                 <div className="space-y-2">
+        //                     <Label className="text-sm font-medium text-muted-foreground">Agent LLM</Label>
+        //                     <p className="font-medium">Open AI | Gemini</p>
+        //                 </div>
+        //                 <div className="space-y-2">
+        //                     <Label className="text-sm font-medium text-muted-foreground">Source URL</Label>
+        //                     <p className="font-medium truncate">{generalSettings?.basicInfo?.sourceUrl}</p>
+        //                 </div>
+        //                 <div className="space-y-2">
+        //                     <Label className="text-sm font-medium text-muted-foreground">Status</Label>
+        //                     <div className="flex items-center gap-2">
+        //                         <Badge
+        //                             variant="outline"
+        //                             className="py-1 px-2 font-medium border-neutral-300 dark:border-neutral-800 bg-muted-light dark:bg-muted-dark"
+        //                         >
+        //                             {generalSettings?.basicInfo?.status}
+        //                         </Badge>
+        //                     </div>
+        //                 </div>
+        //                 <div className="space-y-2 mb-4">
+        //                     <Label className="text-sm font-medium text-muted-foreground">Creation Date</Label>
+        //                     <p className="font-medium">
+        //                         {new Date(generalSettings?.basicInfo?.creationDate || '').toDateString()}
+        //                     </p>
+        //                 </div>
+        //             </div>
+        //             <Separator />
+        //         </CardContent>
+        //     </Card>
+
+        //     <Form {...form}>
+        //         <form onSubmit={form.handleSubmit(onSubmit)} onInvalid={() => console.log('Invalid')}>
+        //             <div className="border-none shadow-none bg-transparent">
+        //                 <div>
+        //                     <p>Response Settings</p>
+        //                     <p>Customize how your agent responds to queries</p>
+        //                 </div>
+
+        //                 <div className="space-y-6">
+        //                     <div className="flex flex-col space-y-4">
+        //                         <div className="flex items-center justify-between">
+        //                             <div className="space-y-0.5">
+        //                                 <Label htmlFor="response-length">Response Length</Label>
+        //                                 <p className="text-sm text-muted-foreground">
+        //                                     Choose how detailed you want the responses to be
+        //                                 </p>
+        //                             </div>
+        //                             <FormField
+        //                                 control={form.control}
+        //                                 name="responseLength"
+        //                                 render={({ field }) => (
+        //                                     <FormItem>
+        //                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
+        //                                             <FormControl className="border-neutral-300 dark:border-neutral-800">
+        //                                                 <SelectTrigger className="w-[180px]">
+        //                                                     <SelectValue placeholder="Select length" />
+        //                                                 </SelectTrigger>
+        //                                             </FormControl>
+        //                                             <SelectContent className="bg-muted-light dark:bg-muted-dark border-neutral-300 dark:border-neutral-800">
+        //                                                 <SelectItem value="Concise">Concise</SelectItem>
+        //                                                 <SelectItem value="Balanced">Balanced</SelectItem>
+        //                                                 <SelectItem value="Detailed">Detailed</SelectItem>
+        //                                             </SelectContent>
+        //                                         </Select>
+        //                                     </FormItem>
+        //                                 )}
+        //                             />
+        //                         </div>
+
+        //                         <Separator />
+
+        //                         <div className="flex items-center justify-between">
+        //                             <div className="space-y-0.5">
+        //                                 <Label htmlFor="enable-sources text-sm">Enable Source Links</Label>
+        //                                 <p className="text-sm text-muted-foreground">
+        //                                     Include reference links in the agent&apos;s responses
+        //                                 </p>
+        //                             </div>
+        //                             <FormField
+        //                                 control={form.control}
+        //                                 name="enableSources"
+        //                                 render={({ field }) => (
+        //                                     <FormItem>
+        //                                         <FormControl className="border-neutral-300 dark:border-neutral-800">
+        //                                             <Switch
+        //                                                 className="data-[state=checked]:bg-neutral-800 dark:data-[state=checked]:bg-white data-[state=unchecked]:bg-neutral-200 dark:data-[state=unchecked]:bg-neutral-700"
+        //                                                 id="enable-sources"
+        //                                                 checked={field.value}
+        //                                                 onCheckedChange={field.onChange}
+        //                                             />
+        //                                         </FormControl>
+        //                                     </FormItem>
+        //                                 )}
+        //                             />
+        //                         </div>
+        //                         <Separator />
+        //                     </div>
+        //                 </div>
+
+        //                 <p className="flex justify-between">
+        //                     <Button onClick={resetSettingsToDefault} variant="destructive" className="cursor-pointer">
+        //                         Reset to Defaults
+        //                     </Button>
+        //                     <Button type="submit" className="cursor-pointer bg-muted-light dark:bg-muted-dark">
+        //                         Save Changes
+        //                     </Button>
+        //                 </p>
+        //             </div>
+        //         </form>
+        //     </Form>
+        // </>
     );
 }

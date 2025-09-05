@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/pagination';
 import { useSearchParams } from 'next/navigation';
 import SkeletonBar from '../Skeleton/skeleton';
+import clsx from 'clsx';
 
 interface QueryProp {
     id: string;
@@ -93,7 +94,6 @@ const useGetQueries = (
 const getPageItems = (currentPage: number, totalPages: number) => {
     const pages = [];
 
-    // Start
     if (currentPage >= 3) {
         pages.push(1);
         pages.push('start-ellipsis');
@@ -106,13 +106,11 @@ const getPageItems = (currentPage: number, totalPages: number) => {
         }
     }
 
-    // Mid
     if (currentPage >= 3 && currentPage < totalPages - 2) {
         pages.push(currentPage - 1, currentPage, currentPage + 1);
         pages.push('end-ellipsis');
     }
 
-    // End
     if (currentPage >= totalPages - 2) {
         for (let i = Math.max(totalPages - 2, 4); i <= totalPages; i++) {
             pages.push(i);
@@ -155,11 +153,11 @@ export default function Queries() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between py-4 gap-4">
                     <div>
-                        <p className="font-semibold text-2xl">User query&apos;s</p>
+                        <p className="font-semibold text-2xl">User queries</p>
                     </div>
                 </div>
                 {/* Show Data updation message when user has subscription  */}
-                <div className="min-h-13">
+                <div className={clsx('min-h-13', queries.length == 0 && 'hidden')}>
                     {queries.length > 0 && (
                         <DataUpdatingAlert
                             icon={<Clock12 />}

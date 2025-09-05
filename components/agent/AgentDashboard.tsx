@@ -8,10 +8,10 @@ import { ArrowRight, Bot, Globe, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AxiosError } from 'axios';
-import { AgentSkeleton } from '../Skeleton/AgentSkeleton';
 import { useQuery } from '@tanstack/react-query';
 import NoDataFound from '../NoDataFound';
 import AgentPreparing from '../AgentPreparing';
+import Loader from '../Loader';
 
 export interface AgentProps {
     id: string;
@@ -116,7 +116,11 @@ export default function AgentDashboard() {
     }, [agent?.status]);
 
     if (isLoading) {
-        return <AgentSkeleton />;
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <Loader strokeWidth="2" size="30" />
+            </div>
+        );
     }
 
     if (error) {

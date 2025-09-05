@@ -14,6 +14,7 @@ import { oneLight, oneDark } from 'react-syntax-highlighter/dist/esm/styles/pris
 import { getLocalStorage } from '@/lib/storage';
 import DataUpdatingAlert from '../DataUpdatingAlert';
 import Feedback from '../Feedback';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface IntegrationCodeProp {
     title: string;
@@ -49,6 +50,10 @@ const integrationCode: IntegrationCodeProp[] = [
 ];
 
 export function AgentDetails({ agent }: { agent: AgentProps }) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const activeTab = searchParams.get('tab');
+
     const isCurrentThemeDark = getLocalStorage('isDarkTheme');
     const codeRef = useRef<HTMLDivElement | null>(null);
     const [copied, setCopied] = useState<number | null>(null);
@@ -76,11 +81,11 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
             <div className="flex items-start justify-between">
                 <div>
                     <div className="flex items-center gap-3">
-                        <h2 className="uppercase text-2xl md:text-3xl font-bold">{agent.name}</h2>
+                        <h2 className="uppercase text-xl md:text-3xl font-bold">{agent.name}</h2>
                         <Bot size={30} />
                         <Badge
                             variant={agent.status === 'Running' ? 'outline' : 'secondary'}
-                            className="bg-[#556B2F] text-white py-1 px-2 font-medium"
+                            className="bg-green-500 text-white py-1 px-2 font-medium shadow-none border-none"
                         >
                             {agent.status}
                         </Badge>
@@ -91,21 +96,32 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                 </div>
             </div>
 
-            <Tabs defaultValue="overview" className="w-full">
+            <Tabs defaultValue={activeTab || 'insights'} className="w-full">
                 <TabsList className="h-12 pb-0 grid w-full grid-cols-3 bg-transparent border-none shadow-none rounded-none">
-                    <TabsTrigger value="overview" className="border-b cursor-pointer">
-                        Overview
+                    <TabsTrigger
+                        value="insights"
+                        className="cursor-pointer"
+                        onClick={() => router.replace('/agent?tab=insights')}
+                    >
+                        Insights
                     </TabsTrigger>
-                    <TabsTrigger value="training" className="border-b cursor-pointer">
-                        Training Data
+                    <TabsTrigger
+                        value="data"
+                        className="cursor-pointer"
+                        onClick={() => router.replace('/agent?tab=data')}
+                    >
+                        Data
                     </TabsTrigger>
-                    <TabsTrigger value="integration" className="border-b cursor-pointer">
+                    <TabsTrigger
+                        value="integration"
+                        className="cursor-pointer"
+                        onClick={() => router.replace('/agent?tab=integration')}
+                    >
                         Integration
                     </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="overview" className="space-y-4 pt-4">
-                    {/* Show the data updation alert  */}
+                <TabsContent value="insights" className="space-y-4 pt-4">
                     {
                         <DataUpdatingAlert
                             icon={<Clock12 />}
@@ -113,72 +129,44 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                         />
                     }
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-                        <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-lg font-semibold">Total Queries</CardTitle>
-                                <BarChart className="h-4 w-4" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{agent.totalQueries}</div>
-                            </CardContent>
-                        </Card>
+                        <InsightCard title="Total Queries" data={agent.totalQueries} icon={<BarChart />} />
 
-                        <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-lg font-semibold">Last Updated</CardTitle>
-                                <Globe className="h-4 w-4" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{timeAgo(agent.lastUpdated)}</div>
-                                <p className="text-xs text-muted-foreground">
-                                    Website crawled on {new Date(agent?.lastUpdated).toLocaleDateString()}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <InsightCard title="Avg. Response Time" data={agent.avgResponseTime} icon={<Clock9 />} />
 
-                        <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-lg font-semibold">Avg. Response Time</CardTitle>
-                                <Clock9 className="h-4 w-4" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{agent.avgResponseTime}</div>
-                            </CardContent>
-                        </Card>
+                        <InsightCard title="This Month Queries" data={agent.thisMonthQueries} icon={<BarChart />} />
 
-                        <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-lg font-semibold">This Month Queries</CardTitle>
-                                <BarChart className="h-4 w-4" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{agent.thisMonthQueries}</div>
-                            </CardContent>
-                        </Card>
+                        <InsightCard
+                            title="Last Updated"
+                            data={timeAgo(agent.lastUpdated)}
+                            icon={<Globe />}
+                            metadata={`Website crawled on ${new Date(agent?.lastUpdated).toLocaleDateString()}`}
+                        />
                     </div>
                 </TabsContent>
 
-                <TabsContent value="training" className="pt-4">
-                    <Card className="border shadow-none bg-[#EEECE8] dark:bg-muted">
-                        <CardHeader>
-                            <div className="flex items-center gap-2">
-                                <Hammer className="h-5 w-5" />
-                                <CardTitle className="text-xl">Training Data</CardTitle>
+                <TabsContent value="data" className="space-y-7 pt-4">
+                    <Card className="gap-3 shadow-none border border-neutral-300 dark:border-neutral-800 bg-transparent">
+                        <CardHeader className="pb-4">
+                            <div className="flex items-center gap-3">
+                                <Hammer className="h-5 w-5 text-muted-foreground" />
+                                <CardTitle className="text-lg font-semibold">Training Data</CardTitle>
                             </div>
-                            <CardDescription>Sources your agent uses to answer questions</CardDescription>
+                            <CardDescription className="text-sm leading-relaxed">
+                                Sources your agent uses to answer questions
+                            </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <Globe className="h-5 w-5" />
-                                        <div className="font-semibold text-xl">Website</div>
+                        <CardContent className="pt-0">
+                            <div className="space-y-6">
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3">
+                                        <Globe className="h-4 w-4 text-muted-foreground" />
+                                        <div className="font-medium text-base">Website</div>
                                     </div>
-                                    <div className="mb-3 mt-2">
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <p className="font-medium">{agent.sourceUrl}</p>
-                                                <p className="text-sm text-muted-foreground">
+                                    <div className="pl-7 space-y-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="min-w-0 flex-1">
+                                                <p className="font-medium text-sm truncate">{agent.sourceUrl}</p>
+                                                <p className="text-xs text-muted-foreground mt-1">
                                                     {agent.metadata.sourceSubUrls.length} pages crawled
                                                 </p>
                                             </div>
@@ -187,8 +175,7 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                                                     <TooltipTrigger asChild>
                                                         <Button
                                                             variant="outline"
-                                                            className="rounded-full bg-white hover:bg-white border-none cursor-pointer shadow-none"
-                                                            size="sm"
+                                                            className="rounded-full shadow-none text-xs px-3 py-1 h-7 shrink-0 bg-transparent"
                                                             disabled
                                                         >
                                                             Recrawl
@@ -208,16 +195,14 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                 </TabsContent>
 
                 <TabsContent value="integration" className="pt-4">
-                    <Card className="bg-[#EEECE8] dark:bg-transparent mb-5 shadow-sm">
+                    <Card className="mb-5 gap-2 shadow-none border border-neutral-300 dark:border-neutral-800 bg-transparent">
                         <CardHeader className="pb-3">
-                            <CardTitle className="font-semibold text-base text-gray-700 dark:text-gray-300">
-                                Your Agent ID
-                            </CardTitle>
+                            <CardTitle className="font-semibold text-base">Your Agent ID</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-0">
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex-1 min-w-0">
-                                    <code className="text-sm font-mono bg-white/50 dark:bg-gray-800/50 px-3 py-2 rounded-md border border-gray-200/50 dark:border-gray-700/50 block truncate text-gray-800 dark:text-gray-200">
+                                    <code className="text-sm font-mono px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-800 block truncate ">
                                         {agent.id}
                                     </code>
                                 </div>
@@ -225,7 +210,7 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleCopyAgentId}
-                                    className="shrink-0 bg-white/70 dark:bg-black border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800"
+                                    className="shrink-0 border border-neutral-300 dark:border-neutral-800"
                                 >
                                     {agentIdCopied ? (
                                         <>
@@ -245,13 +230,36 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                             </p>
                         </CardContent>
                     </Card>
-                    <Card className="bg-[#EEECE8] dark:bg-transparent">
+
+                    {/* Example questions  */}
+                    <Card className="mb-5 gap-2 shadow-none border border-neutral-300 dark:border-neutral-800 bg-transparent">
+                        <CardHeader className="pb-3">
+                            <CardTitle className="font-semibold text-base ">Example questions</CardTitle>
+                            <p className="text-sm my-2">
+                                Your can enter example questions . These questions will show on chat box.
+                            </p>
+                        </CardHeader>
+                        <CardContent className="pt-0 w-full">
+                            <div className="flex flex-col items-start gap-3">
+                                {[1, 2, 3].map((item, idx) => (
+                                    <div key={idx}>{item}</div>
+                                ))}
+                            </div>
+                            <Button
+                                className="w-full mt-5 shadow-none border border-neutral-300 dark:border-neutral-800"
+                                variant="outline"
+                            >
+                                Change
+                            </Button>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="shadow-none  gap-2 border border-neutral-300 dark:border-neutral-800 bg-transparent">
                         <CardHeader>
                             <CardTitle>Website Integration</CardTitle>
                             <CardDescription>Add your agent to your website</CardDescription>
                         </CardHeader>
                         <CardContent className="bg-transparent">
-                            <h3 className="text-xl font-medium mb-2">Add this script to your website</h3>
                             {integrationCode.map((item: IntegrationCodeProp, idx: number) => (
                                 <div key={idx} className="mb-5 bg-transparent">
                                     <div className="rounded-md pt-4">
@@ -276,7 +284,7 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
                                         <Button
                                             variant="outline"
                                             onClick={() => handleCopyCode(item.code, idx)}
-                                            className="w-full shrink-0 bg-white/70 dark:bg-black border-gray-200/50 dark:border-gray-700/50 hover:bg-white dark:hover:bg-gray-800"
+                                            className="w-full shrink-0 border border-neutral-300 dark:border-neutral-800"
                                         >
                                             {copied === idx ? (
                                                 <>
@@ -300,3 +308,28 @@ export function AgentDetails({ agent }: { agent: AgentProps }) {
         </div>
     );
 }
+
+const InsightCard = ({
+    title,
+    data,
+    icon,
+    metadata,
+}: {
+    title: string;
+    data: number | string | undefined | null;
+    icon: React.ReactNode;
+    metadata?: string;
+}) => {
+    return (
+        <Card className="shadow-none border border-neutral-300 dark:border-neutral-800 bg-transparent">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+                <span>{icon}</span>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">{data}</div>
+                <p className="text-xs text-muted-foreground">{metadata && metadata}</p>
+            </CardContent>
+        </Card>
+    );
+};

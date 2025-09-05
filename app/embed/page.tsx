@@ -40,7 +40,7 @@ export default function EmbedChatPage() {
     // If the user opened directly in a tab
     useEffect(() => {
         if (window.top === window.self) {
-            window.location.href = '/agent';
+            window.location.href = '/agent?tab=insights';
         }
     }, []);
     return (
