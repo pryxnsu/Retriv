@@ -3,7 +3,7 @@ import { orbitron } from '../lib/fonts/fonts';
 
 export function Header() {
     return (
-        <header className="w-full bg-background">
+        <header className="w-full bg-background rounded-2xl">
             <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
                 <Link href="/" className={`flex items-center gap-3 ${orbitron.className}`}>
                     <span className="font-bold text-2xl md:text-3xl">Retriv</span>
