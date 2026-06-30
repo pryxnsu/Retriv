@@ -1,44 +1,47 @@
-# **Retriv**
+# Retriv
 
 ![Retriv Image](public/og-image.png)
 
-Retriv helps you to add smart AI chatbots to your website without writing any code. 
+Retriv is a no-code platform that enables businesses to deploy AI chatbots trained on their website content. It automatically crawls and indexes website pages, generates embeddings, and provides an embeddable chat widget with real-time AI responses.
 
-## **Features**
+## Features
 
-- Lets users register their AI agent by submitting their website URL.
-- Automatically crawls and indexes the website pages content.
-- Provides a embeddable frontend script to integrate the AI agent on any website.
-- Supports chat-based interactions, with real-time streaming responses from the agent.
-- Enables organizations to track and analyze agent usage, agent responses, performance and response accuracy.
-- Includes conversation history, source-linked answers, and customizable agent settings.
+- **No-Code AI Agent Creation** – Create AI agents by simply submitting a website URL.
+- **Automated Website Crawling** – Crawl and extract content from website pages for knowledge ingestion.
+- **Embeddable Chat Widget** – Integrate AI agents into any website using a single script.
+- **Streaming AI Responses** – Deliver real-time streamed responses for a smooth chat experience.
+- **Knowledge-Based Answers** – Generate responses using retrieved website content with source references.
+- **Analytics Dashboard** – Monitor conversations, response quality, and agent usage.
+- **Customizable Agents** – Configure agent behavior and settings for different use cases.
 
-## **Built With**
+## Architecture & Tech Stack
 
-- **[Next.js](https://nextjs.org/)**
-- **[Tailwind CSS](https://tailwindcss.com/)**
-- **[Shadcn/UI](https://ui.shadcn.com/)**
-- **[Node.js](https://nodejs.org/)**
-- **[Express.js](https://expressjs.com/)**
-- **[Python](https://www.python.org/)**
-- **[Redis](https://redis.io/)**
-- **[FastAPI](https://fastapi.tiangolo.com/)**
-- **[Redis](https://redis.io/)**
-- **[Prisma](https://www.prisma.io/)**
-- **[Langchain](https://www.langchain.com/)**
-- **[Langfuse](https://langfuse.com/)**
-- **[PostgreSQL](https://www.postgresql.org/)**
-- **[Qdrant](https://qdrant.tech/)**
-- **[BeautifulSoup]()**
+Retriv is built as a multi-service architecture, where each service is responsible for a specific part of the AI pipeline.
 
-## **Demo Video**
+| Repository | Description |
+|------------|-------------|
+| **[Frontend](https://github.com/pryxnsu/Retriv)** | Next.js dashboard, authentication, billing, and chatbot management (this repository). |
+| **[Node.js API](https://github.com/pryxnsu/retriv-nodejs-api)** | REST API, authentication, agent management, chat APIs, and job orchestration. |
+| **[Python Worker](https://github.com/pryxnsu/retriv-python)** | Website crawling, document processing, embedding generation, and vector indexing. |
 
-[![WatchDemo](public/thumbnail.png)](https://youtu.be/_V30qqdX1p4)
+### Tech Stack
 
-I embedded it on my portfolio website where you can see the agent being embedded and responding based on my website data.
+- **Frontend:** Next.js, Tailwind CSS, shadcn/ui
+- **Backend:** Node.js, Express.js, Python, FastAPI
+- **Database:** PostgreSQL, Prisma
+- **Vector Database:** Qdrant
+- **Queue & Cache:** Redis
+- **AI:** LangChain, Langfuse
+- **Web Crawling:** BeautifulSoup
 
-## **Design**
+## Demo
 
-Below is the basic architectural flow of the Agent Create and Chat routes in the system:
+[![Watch Demo](public/thumbnail.png)](https://youtu.be/_V30qqdX1p4)
 
-![Architecture Design Image](public/architecture.png)
+The chatbot is embedded on my portfolio website, where it answers questions using content indexed from the website itself.
+
+## Architecture
+
+The diagram below illustrates the high-level workflow for agent creation and chat requests.
+
+![Architecture Design](public/architecture.png)
