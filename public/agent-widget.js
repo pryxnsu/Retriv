@@ -1,6 +1,6 @@
 async function verify(agentId) {
     const searchParams = new URLSearchParams({ agent_id: agentId });
-    const RETRIV_API_BASE = 'https://api.retriv.xyz';
+    const RETRIV_API_BASE = 'https://apiretriv.priyanshu.me';
     try {
         const response = await fetch(`${RETRIV_API_BASE}/verify-embed?${searchParams.toString()}`, {
             method: 'GET',
